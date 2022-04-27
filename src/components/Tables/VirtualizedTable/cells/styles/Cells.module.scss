@@ -1,0 +1,27 @@
+.cell {
+  background-color: var(--background-primary);
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  transition: all 0.1s ease;
+
+  &_gray {
+    background-color: var(--background-onprimary);
+  }
+
+  &_withoutShadow {
+    box-shadow: none;
+  }
+}
+
+.headerCell {
+  background-color: var(--table-header);
+  height: 100%;
+  width: 100%;
+  composes: flexCenter from global;
+}
+
+.headerCellDark {
+  composes: headerCell;
+  background-color: var(--table-headerSecondary);
+}

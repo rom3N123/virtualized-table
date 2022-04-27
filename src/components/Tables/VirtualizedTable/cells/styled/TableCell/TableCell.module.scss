@@ -1,0 +1,20 @@
+@import '/src/css/mixins';
+
+.highlighted {
+  background-color: var(--table-highlight) !important;
+}
+
+.divider {
+  &_top {
+    @include divider(top);
+  }
+  &_left {
+    @include divider(left);
+  }
+  &_right {
+    @include divider(right)
+  }
+  &_bottom {
+    @include divider(bottom);
+  }
+}
