@@ -1,9 +1,9 @@
 import React, { FC, Ref } from 'react';
 import { UseTableHeaderGroupProps } from 'react-table';
 
-type HeaderRowProps<D extends object = {}> = {
+export type HeaderRowProps<D extends object = {}> = {
 	headerGroups: UseTableHeaderGroupProps<D>['headers'];
-	headerRef: Ref<HTMLDivElement>;
+	headerRef?: Ref<HTMLDivElement>;
 	height?: number;
 	fullWidthHeader?: boolean;
 };

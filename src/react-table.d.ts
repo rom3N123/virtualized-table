@@ -6,6 +6,9 @@ declare module 'react-table' {
 			UseSortByColumnOptions<D> {}
 
 	export type GetRowId = UseTableOptions['getRowId'];
+	export type GetTableBodyProps = UseTableInstanceProps['getTableBodyProps'];
+	export type UseTableRows = UseTableInstanceProps['rows'];
+	export type PrepareRow = UseTableInstanceProps['prepareRow'];
 
 	export interface UseTableColumnProps<D extends object>
 		extends UseResizeColumnsColumnProps<D>,
