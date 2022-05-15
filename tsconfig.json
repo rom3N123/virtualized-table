@@ -17,6 +17,6 @@
 		"jsx": "react-jsx"
 	},
 	"include": ["src"],
-	"files": ["./src/helpers/Observable/Observable.d.ts"],
+	"files": ["./src/helpers/Observable/Observable.d.ts", "./src/global.d.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
