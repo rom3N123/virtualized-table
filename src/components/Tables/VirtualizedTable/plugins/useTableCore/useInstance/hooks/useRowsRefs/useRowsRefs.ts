@@ -14,14 +14,14 @@ export type RowsRefs = Record<string, RowRef>;
 
 type RowCallback<T extends any = void> = (rowId: string | number) => T;
 
-export type useRowsRefsReturn = {
-	refs: RowsRefs;
+export type UseRowsRefsReturn = {
+	refs: MutableRefObject<RowsRefs>;
 	initializeRef: RowCallback<RowRef>;
 	deleteRef: RowCallback;
 	getRowRef: RowCallback<RowRef>;
 };
 
-const useRowsRefs = () => {
+const useRowsRefs = (): UseRowsRefsReturn => {
 	const refs = useRef<RowsRefs>({});
 
 	const getRowRef = (rowId: string | number): RowRef => refs.current[rowId];

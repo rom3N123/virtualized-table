@@ -1,7 +1,9 @@
 import { PluginHook } from 'react-table';
+import { UseRowsRefsReturn } from './useInstance/hooks/useRowsRefs/useRowsRefs';
 import useInstance from './useInstance/useInstance';
 
 export const USE_TABLE_CORE_PLUGIN_NAME = 'useTableCore';
+export type UseTableCoreInstanceProps = UseRowsRefsReturn;
 
 /**
  * Основной плагин, который инициализирует всё необходимое для работы остальных плагинов.
@@ -10,7 +12,6 @@ export const USE_TABLE_CORE_PLUGIN_NAME = 'useTableCore';
 const useTableCore: PluginHook<{}> = hooks => {
 	hooks.useInstance.push(useInstance);
 };
-
 useTableCore.pluginName = USE_TABLE_CORE_PLUGIN_NAME;
 
 export default useTableCore;
