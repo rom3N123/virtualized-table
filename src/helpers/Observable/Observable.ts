@@ -1,5 +1,8 @@
-export default class ObservableImplementation<T> implements Observable<T> {
-	constructor(private _value: T, private listeners: ObservableListener<T>[]) {}
+import * as T from './Observable.types';
+export default class ObservableImplementation<T> implements T.Observable<T> {
+	private listeners: T.ObservableListener<T>[] = [];
+
+	constructor(private _value: T) {}
 
 	get value() {
 		return this._value;
@@ -14,7 +17,7 @@ export default class ObservableImplementation<T> implements Observable<T> {
 		this.listeners.forEach(listener => listener(this.value));
 	}
 
-	subscribe(listener: ObservableListener<T>) {
+	subscribe(listener: T.ObservableListener<T>) {
 		this.listeners.push(listener);
 		return () => {
 			this.listeners.filter(l => l !== listener);

@@ -1,6 +1,6 @@
-type ObservableListener<T> = (value: T) => any;
+export type ObservableListener<T> = (value: T) => any;
 
-type Observable<T> = {
+export type Observable<T> = {
 	value: T;
 	get: () => T;
 	set: (value: T) => void;
