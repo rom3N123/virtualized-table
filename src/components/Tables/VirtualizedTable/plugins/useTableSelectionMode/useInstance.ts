@@ -6,7 +6,7 @@ import { useTableIsSelectionModeContext } from '../../contexts/TableIsSelectionM
 
 type SelectionModeObservable = Observable<boolean>;
 
-export type UseTableSelectionModeInstanceProps = {
+export type TableSelectionModeInstanceProps = {
 	enableTableSelectionMode: () => void;
 	disableTableSelectionMode: () => void;
 	changeTableSelectionMode: () => void;

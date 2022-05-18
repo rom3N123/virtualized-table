@@ -1,11 +1,17 @@
-import { useRef, createRef, SetStateAction, MutableRefObject } from 'react';
+import {
+	useRef,
+	createRef,
+	SetStateAction,
+	MutableRefObject,
+	Dispatch,
+} from 'react';
 import { Row } from 'react-table';
 
 export type RowRefMethods = {
 	row: Row;
 	isSelected: boolean;
-	setIsSelected: SetStateAction<boolean>;
-	setIsHighlighted: SetStateAction<boolean>;
+	setIsSelected: Dispatch<SetStateAction<boolean>>;
+	setIsHighlighted: Dispatch<SetStateAction<boolean>>;
 };
 
 export type RowRef = MutableRefObject<RowRefMethods | null>;

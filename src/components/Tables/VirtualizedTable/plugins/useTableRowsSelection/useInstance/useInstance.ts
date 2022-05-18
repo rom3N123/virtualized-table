@@ -1,30 +1,27 @@
-import { ProxyTarget } from './../utils';
-import { USE_TABLE_CORE_PLUGIN_NAME } from './../useTableCore/useTableCore';
-/* eslint-disable import/no-cycle, max-len */
-import { MutableRefObject, useEffect, useState } from 'react';
-import { ensurePluginOrder, Row } from 'react-table';
-import useObservable from '../../../../../hooks/useObservable';
-import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection/useTableRowsSelection';
-import { TableInstance } from 'react-table';
-import { UseRowsRefsReturn } from '../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
-import { TableSelectionModeInstanceProps } from '../useTableSelectionMode/useInstance';
-import useSelectedRowsRefs from '../useTableRowsSelection/useInstance/hooks/useSelectedRowsRefs';
-import Observable from '../../../../../helpers/Observable';
+import { ProxyTarget } from './../../utils';
+import { UseRowsRefsReturn } from './../../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
+import { TableSelectionModeInstanceProps } from './../../useTableSelectionMode/useInstance';
+import { USE_TABLE_CORE_PLUGIN_NAME } from './../../useTableCore/useTableCore';
+/* eslint-disable max-len, guard-for-in, no-restricted-syntax */
+import { useEffect, useState, MutableRefObject } from 'react';
+import useObservable from '../../../../../../hooks/useObservable';
+import Observable from '../../../../../../helpers/Observable';
+import { ensurePluginOrder, TableInstance, Row } from 'react-table';
+import useSelectedRowsRefs from './hooks/useSelectedRowsRefs/useSelectedRowsRefs';
+import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection';
 
 export type TableRowsSelectionInstanceProps = {
 	areAllRowsSelectedObservable: Observable<boolean>;
-	selectedCacheById: MutableRefObject<ProxyTarget<Record<string, object>>>;
-	selectedCacheArrayRef: MutableRefObject<ProxyTarget<Record<string, object>>>;
+	selectedCacheById: Record<string, Row>;
+	selectedCacheArrayRef: MutableRefObject<ProxyTarget<Row[]>>;
 	toggleRowSelected: (index: number) => void;
 	toggleAllRowsSelected: () => void;
 	getIsSelectedRow: (row: Row) => boolean;
 	clearSelectedRows: () => void;
-	deleteRowsFromSelected: (rowsIds: (string | number)[]) => void;
-	getSelectedRows: () => Row[];
 };
 
 const useInstance = (
-	instance: TableInstance & UseRowsRefsReturn & TableSelectionModeInstanceProps
+	instance: TableInstance & TableSelectionModeInstanceProps & UseRowsRefsReturn
 ) => {
 	const {
 		rows,
@@ -38,9 +35,7 @@ const useInstance = (
 	} = instance;
 
 	const { selectedCacheByIdRef, selectedCacheArrayRef } = useSelectedRowsRefs();
-	const [areAllRowsSelectedObservable] = useState<Observable<boolean>>(
-		new Observable<boolean>(false)
-	);
+	const [areAllRowsSelectedObservable] = useState(new Observable(false));
 
 	const isSelectionMode = useObservable(isSelectionModeObservable);
 
@@ -50,24 +45,21 @@ const useInstance = (
 		USE_TABLE_ROWS_SELECTION_PLUGIN_NAME
 	);
 
-	/**
-	 * FIXME
-	 */
-	// useEffect(() => {
-	// 	if (preselectedRows?.length) {
-	// 		const instanceRows = preselectedRows
-	// 			.map(selectedRow => getRowId(selectedRow))
-	// 			.map(rowId => rowsById[rowId]);
+	useEffect(() => {
+		if (preselectedRows?.length) {
+			const instanceRows = preselectedRows
+				.map(selectedRow => getRowId(selectedRow))
+				.map(rowId => rowsById[rowId]);
 
-	// 		for (const instanceRow of instanceRows) {
-	// 			selectedCacheByIdRef.current[instanceRow.id] = instanceRow;
-	// 		}
-	// 		selectedCacheArrayRef.current.value = [
-	// 			...instanceRows,
-	// 			...selectedCacheArrayRef.current.value,
-	// 		];
-	// 	}
-	// }, [preselectedRows]);
+			for (const instanceRow of instanceRows) {
+				selectedCacheByIdRef.current[instanceRow.id] = instanceRow;
+			}
+			selectedCacheArrayRef.current.value = [
+				...instanceRows,
+				...selectedCacheArrayRef.current.value,
+			];
+		}
+	}, [preselectedRows]);
 
 	const clearSelectedRows = () => {
 		for (const rowId in refs.current) {
@@ -81,22 +73,6 @@ const useInstance = (
 		selectedCacheArrayRef.current.value = [];
 
 		areAllRowsSelectedObservable.set(false);
-	};
-
-	const deleteRowsFromSelected = (rowsIds: (number | string)[]) => {
-		if (rows.length === rowsIds.length) {
-			selectedCacheByIdRef.current = {};
-			selectedCacheArrayRef.current.value = [];
-		} else {
-			for (const rowId of rowsIds) {
-				delete selectedCacheByIdRef.current[rowId];
-			}
-
-			selectedCacheArrayRef.current.value =
-				selectedCacheArrayRef.current.value.filter(
-					row => !rowsIds.includes(row.id)
-				);
-		}
 	};
 
 	const toggleRowSelected = (index: number) => {
@@ -159,11 +135,7 @@ const useInstance = (
 		}
 	}, [isSelectionMode]);
 
-	const getSelectedRows = () => {
-		return selectedCacheArrayRef.current.value.map(row => rowsById[row.id]);
-	};
-
-	Object.assign(instance, {
+	const instanceProps: TableRowsSelectionInstanceProps = {
 		areAllRowsSelectedObservable,
 		selectedCacheById: selectedCacheByIdRef.current,
 		selectedCacheArrayRef,
@@ -171,9 +143,9 @@ const useInstance = (
 		toggleAllRowsSelected,
 		getIsSelectedRow,
 		clearSelectedRows,
-		deleteRowsFromSelected,
-		getSelectedRows,
-	});
+	};
+
+	Object.assign(instance, instanceProps);
 };
 
 export default useInstance;

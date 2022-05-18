@@ -11,7 +11,7 @@ export const combineFunctions: CombineFunctions =
 		setIsSomeRowsSelected?.(Boolean(rows.length));
 	};
 
-type ProxyTarget<T> = { value: T };
+export type ProxyTarget<T> = { value: T };
 
 export const getProxiedArray = <R extends object>(
 	target: ProxyTarget<R[]>,

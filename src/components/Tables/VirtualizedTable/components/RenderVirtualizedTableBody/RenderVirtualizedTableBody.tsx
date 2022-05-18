@@ -15,7 +15,7 @@ import RenderVirtualizedTableRowWithRef from '../../renderComponents/RenderVirtu
 export type RowProps = object | ((row: Row) => object);
 export type GetItemSize = number | ((row: Row) => number);
 
-type RenderVirtualizedTableBodyProps = {
+export type RenderVirtualizedTableBodyProps = {
 	getTableBodyProps: GetTableBodyProps;
 	rows: UseTableRows;
 	prepareRow: PrepareRow;

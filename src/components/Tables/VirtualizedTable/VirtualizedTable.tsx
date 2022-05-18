@@ -12,12 +12,13 @@ import NonVirtualizedTable from '../NonVirtualizedTable/NonVirtualizedTable';
 import RenderVirtualizedTable from './renderComponents/RenderVirtualizedTable';
 import RenderVirtualizedTableBody from './renderComponents/RenderVirtualizedTableBody';
 import { HeaderRowProps } from '../../HeaderRow/HeaderRow';
+import VirtualizedTableBody from './components/VirtualizedTableBody';
 
 type VirtualizedTableProps = {
 	data: object[];
 	columns: Column[];
 	getRowId: GetRowId;
-	extraPlugins?: PluginHook<object>[];
+	extraPlugins?: PluginHook<{}, {}>[];
 	HeaderRow: FC<HeaderRowProps>;
 	TableBody: FC;
 };
@@ -31,7 +32,7 @@ const VirtualizedTable: FC = memo(
 				getRowId,
 				extraPlugins = [],
 				HeaderRow,
-				TableBody,
+				TableBody = VirtualizedTableBody,
 				...useTableProps
 			},
 			ref
