@@ -22,17 +22,23 @@ declare module 'react-table' {
 		meta: Meta<D>
 	) => void;
 
-	export type TableInstanceWithProps<P extends object> = TableInstance & P;
+	export type TableInstanceWithProps<
+		D extends object,
+		P extends object
+	> = TableInstance<D> & P;
 
-	export type FinalTableInstance<ExtraProps extends object = {}> =
-		TableInstanceWithProps<
-			TableCoreInstanceProps &
-				TableLinkHighlightRowWithSelectionInstanceProps &
-				TableHighlightInstanceProps &
-				TableRowsSelectionInstanceProps &
-				TableSelectionModeInstanceProps &
-				ExtraProps
-		>;
+	export type FinalTableInstance<
+		D extends object,
+		ExtraProps extends object = {}
+	> = TableInstanceWithProps<
+		D,
+		TableCoreInstanceProps &
+			TableLinkHighlightRowWithSelectionInstanceProps &
+			TableHighlightInstanceProps &
+			TableRowsSelectionInstanceProps &
+			TableSelectionModeInstanceProps &
+			ExtraProps
+	>;
 
 	export interface Hooks<D extends object = {}, P extends object>
 		extends UseTableHooks<D> {

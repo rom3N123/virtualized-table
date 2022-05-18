@@ -24,17 +24,17 @@ import { VariableSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { RenderVirtualizedTableBodyProps } from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 
-export type GetItemSize =
+export type GetItemSize<D extends object> =
 	| number
-	| ((row: Row, tableRef: ForwardedRef<TableRefValue>) => number);
+	| ((row: Row, tableRef: ForwardedRef<TableRefValue<D>>) => number);
 
 export type RowProps = object | ((row: Row) => object);
 
-export type VirtualizedTableProps<D extends object = {}> = {
+export type VirtualizedTableProps<D extends object> = {
 	data: D[];
-	columns: Column[];
+	columns: Column<D>[];
 	getRowId: GetRowId<D>;
-	getItemSize: GetItemSize;
+	getItemSize: GetItemSize<D>;
 	headerHeight: number;
 
 	extraPlugins?: PluginHook<{}, {}>[];
@@ -53,109 +53,105 @@ export type VirtualizedTableProps<D extends object = {}> = {
 	itemExtraData?: object;
 };
 
-export type TableRefValue = {
-	instance: FinalTableInstance;
-	changeTableSelectionMode: FinalTableInstance['changeTableSelectionMode'];
-	enableTableSelectionMode: FinalTableInstance['enableTableSelectionMode'];
-	disableTableSelectionMode: FinalTableInstance['disableTableSelectionMode'];
-	selectedArray: FinalTableInstance['selectedCacheArrayRef']['current'];
-	selectedObject: FinalTableInstance['selectedCacheById'];
-	highlightedRow: FinalTableInstance['highlightedRowRef']['current']['value'];
-	clearSelectedRows: FinalTableInstance['clearSelectedRows'];
-	deleteRowsFromSelected: FinalTableInstance['deleteRowsFromSelected'];
+export type TableRefValue<D extends object> = {
+	instance: FinalTableInstance<D>;
+	changeTableSelectionMode: FinalTableInstance<D>['changeTableSelectionMode'];
+	enableTableSelectionMode: FinalTableInstance<D>['enableTableSelectionMode'];
+	disableTableSelectionMode: FinalTableInstance<D>['disableTableSelectionMode'];
+	selectedArray: FinalTableInstance<D>['selectedCacheArrayRef']['current'];
+	selectedObject: FinalTableInstance<D>['selectedCacheById'];
+	highlightedRow: FinalTableInstance<D>['highlightedRowRef']['current']['value'];
+	clearSelectedRows: FinalTableInstance<D>['clearSelectedRows'];
+	deleteRowsFromSelected: FinalTableInstance<D>['deleteRowsFromSelected'];
 };
 
-const VirtualizedTable = memo(
-	forwardRef<TableRefValue, VirtualizedTableProps>(
-		(
-			{
-				data,
-				columns,
-				getRowId,
-				HeaderRow,
-				getItemSize,
-				headerHeight,
-				ItemLoader,
-				RenderItem,
-				hasNextPage,
-				itemExtraData,
-				listRef,
-				isLoadingNextPage,
-				loadPerPage,
-				rowProps,
-				onLoadPage,
-				TableBody = VirtualizedTableBody,
-				extraPlugins = [],
-				...useTableProps
-			},
-			ref
-		): ReactElement => {
-			const plugins = [...VIRTUALIZED_TABLE_PLUGINS, ...extraPlugins];
+function VirtualizedTable<D extends object>(
+	{
+		data,
+		columns,
+		getRowId,
+		HeaderRow,
+		getItemSize,
+		headerHeight,
+		ItemLoader,
+		RenderItem,
+		hasNextPage,
+		itemExtraData,
+		listRef,
+		isLoadingNextPage,
+		loadPerPage,
+		rowProps,
+		onLoadPage,
+		TableBody = VirtualizedTableBody,
+		extraPlugins = [],
+		...useTableProps
+	}: VirtualizedTableProps<D>,
+	ref: ForwardedRef<TableRefValue<D>>
+): ReactElement {
+	const plugins = [...VIRTUALIZED_TABLE_PLUGINS, ...extraPlugins];
 
-			const instance = useTable(
-				{
-					data,
-					columns,
-					getRowId,
-					...useTableProps,
-				},
-				useBlockLayout,
-				useExpanded,
-				// useSticky,
-				...plugins
-			) as FinalTableInstance;
+	const instance = useTable(
+		{
+			data,
+			columns,
+			getRowId,
+			...useTableProps,
+		},
+		useBlockLayout,
+		useExpanded,
+		// useSticky,
+		...plugins
+	) as FinalTableInstance<D>;
 
-			useImperativeHandle(ref, () => {
-				return {
-					instance,
-					changeTableSelectionMode: instance.changeTableSelectionMode,
-					enableTableSelectionMode: instance.enableTableSelectionMode,
-					disableTableSelectionMode: instance.disableTableSelectionMode,
-					selectedArray: instance.selectedCacheArrayRef.current,
-					selectedObject: instance.selectedCacheById,
-					highlightedRow: instance.highlightedRowRef.current.value,
-					clearSelectedRows: instance.clearSelectedRows,
-					getSelectedRows: instance.getSelectedRows,
-					deleteRowsFromSelected: instance.deleteRowsFromSelected,
-				};
-			});
+	useImperativeHandle(ref, () => {
+		return {
+			instance,
+			changeTableSelectionMode: instance.changeTableSelectionMode,
+			enableTableSelectionMode: instance.enableTableSelectionMode,
+			disableTableSelectionMode: instance.disableTableSelectionMode,
+			selectedArray: instance.selectedCacheArrayRef.current,
+			selectedObject: instance.selectedCacheById,
+			highlightedRow: instance.highlightedRowRef.current.value,
+			clearSelectedRows: instance.clearSelectedRows,
+			getSelectedRows: instance.getSelectedRows,
+			deleteRowsFromSelected: instance.deleteRowsFromSelected,
+		};
+	});
 
-			const { getTableBodyProps, headerGroups, rows, prepareRow } =
-				instance as FinalTableInstance;
+	const { getTableBodyProps, headerGroups, rows, prepareRow } =
+		instance as FinalTableInstance<D>;
 
-			return (
-				<AutoSizer>
-					{({ width, height }) => (
-						<>
-							<HeaderRow headerGroups={headerGroups} />
+	return (
+		<AutoSizer>
+			{({ width, height }) => (
+				<>
+					<HeaderRow headerGroups={headerGroups} />
 
-							<TableBody
-								tableRef={ref}
-								getItemSize={getItemSize}
-								getRowId={getRowId}
-								instance={instance}
-								width={width}
-								height={height}
-								getTableBodyProps={getTableBodyProps}
-								headerHeight={headerHeight}
-								prepareRow={prepareRow}
-								ItemLoader={ItemLoader}
-								rows={rows}
-								RenderItem={RenderItem}
-								hasNextPage={hasNextPage}
-								itemExtraData={itemExtraData}
-								listRef={listRef}
-								isLoadingNextPage={isLoadingNextPage}
-								loadPerPage={loadPerPage}
-								rowProps={rowProps}
-								onLoadPage={onLoadPage}
-							/>
-						</>
-					)}
-				</AutoSizer>
-			);
-		}
-	)
-);
+					<TableBody
+						tableRef={ref}
+						getItemSize={getItemSize}
+						getRowId={getRowId}
+						instance={instance}
+						width={width}
+						height={height}
+						getTableBodyProps={getTableBodyProps}
+						headerHeight={headerHeight}
+						prepareRow={prepareRow}
+						ItemLoader={ItemLoader}
+						rows={rows}
+						RenderItem={RenderItem}
+						hasNextPage={hasNextPage}
+						itemExtraData={itemExtraData}
+						listRef={listRef}
+						isLoadingNextPage={isLoadingNextPage}
+						loadPerPage={loadPerPage}
+						rowProps={rowProps}
+						onLoadPage={onLoadPage}
+					/>
+				</>
+			)}
+		</AutoSizer>
+	);
+}
 
-export default VirtualizedTable;
+export default memo(forwardRef(VirtualizedTable));
