@@ -6,6 +6,7 @@ import React, {
 	useImperativeHandle,
 	Ref,
 	ForwardedRef,
+	ForwardRefExoticComponent,
 } from 'react';
 import { VIRTUALIZED_TABLE_PLUGINS } from './VirtualizedTable.constants';
 import {
@@ -20,9 +21,14 @@ import {
 } from 'react-table';
 import { HeaderRowProps } from '../../HeaderRow/HeaderRow';
 import VirtualizedTableBody from './components/VirtualizedTableBody';
-import { VariableSizeList } from 'react-window';
+import { ListChildComponentProps, VariableSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { RenderVirtualizedTableBodyProps } from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
+import {
+	DefaultExtraItemData,
+	RenderVirtualizedTableBodyProps,
+} from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
+import RenderVirtualizedTableRow from './renderComponents/RenderVirtualizedTableRow';
+import LoadingItem from '../../LoadingItem';
 
 export type GetItemSize<D extends object> =
 	| number
@@ -30,7 +36,15 @@ export type GetItemSize<D extends object> =
 
 export type RowProps = object | ((row: Row) => object);
 
-export type VirtualizedTableProps<D extends object> = {
+export type RenderItemProps<
+	D extends object = {},
+	ExtraItemProps extends object = {}
+> = ListChildComponentProps<DefaultExtraItemData<D, ExtraItemProps>>;
+
+export type VirtualizedTableProps<
+	D extends object = {},
+	ExtraItemProps extends object = {}
+> = {
 	data: D[];
 	columns: Column<D>[];
 	getRowId: GetRowId<D>;
@@ -38,19 +52,21 @@ export type VirtualizedTableProps<D extends object> = {
 	headerHeight: number;
 
 	extraPlugins?: PluginHook<{}, {}>[];
-	TableBody?: FC<RenderVirtualizedTableBodyProps>;
+	TableBody?: <D extends object, ExtraItemProps extends object = {}>(
+		props: RenderVirtualizedTableBodyProps<D, {}>
+	) => ReactElement;
 	HeaderRow?: FC<HeaderRowProps>;
 	TableRow?: FC;
 	listRef?: Ref<VariableSizeList>;
-	RenderItem?: FC;
-	ItemLoader?: FC;
+	RenderItem?: ForwardRefExoticComponent<RenderItemProps<D, ExtraItemProps>>;
+	ItemLoader?: FC<RenderItemProps>;
 	isLoadingNextPage?: boolean;
 	onLoadPage?: () => any;
 	loadPerPage?: number;
 	hasNextPage?: boolean;
 	rowProps?: RowProps;
 	className?: string;
-	itemExtraData?: object;
+	itemExtraData?: ExtraItemProps;
 };
 
 export type TableRefValue<D extends object> = {
@@ -65,7 +81,10 @@ export type TableRefValue<D extends object> = {
 	deleteRowsFromSelected: FinalTableInstance<D>['deleteRowsFromSelected'];
 };
 
-function VirtualizedTable<D extends object>(
+function VirtualizedTable<
+	D extends object = {},
+	ExtraItemProps extends object = {}
+>(
 	{
 		data,
 		columns,
@@ -73,8 +92,6 @@ function VirtualizedTable<D extends object>(
 		HeaderRow,
 		getItemSize,
 		headerHeight,
-		ItemLoader,
-		RenderItem,
 		hasNextPage,
 		itemExtraData,
 		listRef,
@@ -82,10 +99,12 @@ function VirtualizedTable<D extends object>(
 		loadPerPage,
 		rowProps,
 		onLoadPage,
+		ItemLoader = LoadingItem,
+		RenderItem = RenderVirtualizedTableRow,
 		TableBody = VirtualizedTableBody,
 		extraPlugins = [],
 		...useTableProps
-	}: VirtualizedTableProps<D>,
+	}: VirtualizedTableProps<D, ExtraItemProps>,
 	ref: ForwardedRef<TableRefValue<D>>
 ): ReactElement {
 	const plugins = [...VIRTUALIZED_TABLE_PLUGINS, ...extraPlugins];
@@ -127,7 +146,7 @@ function VirtualizedTable<D extends object>(
 				<>
 					<HeaderRow headerGroups={headerGroups} />
 
-					<TableBody
+					<TableBody<D, ExtraItemProps>
 						tableRef={ref}
 						getItemSize={getItemSize}
 						getRowId={getRowId}
@@ -154,4 +173,4 @@ function VirtualizedTable<D extends object>(
 	);
 }
 
-export default memo(forwardRef(VirtualizedTable));
+export default memo(forwardRef(VirtualizedTable)) as typeof VirtualizedTable;

@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import ContentLoader from 'react-content-loader';
+import {
+	RenderItemProps,
+	VirtualizedTableProps,
+} from '../Tables/VirtualizedTable/VirtualizedTable';
 
 export const ROW_INDENT_Y = 0;
 export const FIRST_ROW_INDENT_Y = 10;
 
-const LoadingItem = ({ index, data: { rows }, style }) => {
+const LoadingItem: VirtualizedTableProps['ItemLoader'] = ({
+	index,
+	data: { rows },
+	style,
+}) => {
 	const y = rows.length - 1 === index ? ROW_INDENT_Y : FIRST_ROW_INDENT_Y;
 	const { height } = style;
 

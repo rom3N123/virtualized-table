@@ -9,10 +9,8 @@ import React, {
 import { DroppableProvided } from 'react-beautiful-dnd';
 import {
 	FinalTableInstance,
-	GetRowId,
 	GetTableBodyProps,
 	PrepareRow,
-	Row,
 	TableState,
 	UseTableRows,
 } from 'react-table';
@@ -23,13 +21,16 @@ import { TableHighlightInstanceProps } from '../../plugins/useTableRowHighlight/
 import RenderVirtualizedTableRowWithRef from '../../renderComponents/RenderVirtualizedTableRow/RenderVirtualizedTableRowWithRef';
 import {
 	GetItemSize,
-	RowProps,
+	RenderItemProps,
 	TableRefValue,
 	VirtualizedTableProps,
 } from '../../VirtualizedTable';
 
-export type RenderVirtualizedTableBodyProps = Pick<
-	VirtualizedTableProps,
+export type RenderVirtualizedTableBodyProps<
+	D extends object,
+	ExtraItemProps extends object = {}
+> = Pick<
+	VirtualizedTableProps<D, ExtraItemProps>,
 	| 'getItemSize'
 	| 'getRowId'
 	| 'rowProps'
@@ -38,41 +39,43 @@ export type RenderVirtualizedTableBodyProps = Pick<
 	| 'isLoadingNextPage'
 	| 'headerHeight'
 	| 'itemExtraData'
-	| 'RenderItem'
-	| 'ItemLoader'
 	| 'loadPerPage'
 	| 'onLoadPage'
 > & {
 	getTableBodyProps: GetTableBodyProps;
 	rows: UseTableRows;
 	prepareRow: PrepareRow;
-	instance: FinalTableInstance;
-	tableRef: ForwardedRef<TableRefValue>;
+	instance: FinalTableInstance<D>;
+	tableRef: ForwardedRef<TableRefValue<D>>;
 	width: number;
 	height: number;
 	outerRef?: Ref<HTMLDivElement>;
+	RenderItem: Required<VirtualizedTableProps<D, ExtraItemProps>>['RenderItem'];
+	ItemLoader?: VirtualizedTableProps<D, ExtraItemProps>['ItemLoader'];
 };
 
-export type DefaultExtraItemData<D extends object = {}> = D & {
+export type DefaultExtraItemData<
+	D extends object,
+	E extends object = {}
+> = Pick<
+	RenderVirtualizedTableBodyProps<D, E>,
+	'getRowId' | 'rows' | 'prepareRow' | 'rowProps'
+> & {
 	provided: DroppableProvided;
-	getRowId: GetRowId;
-	selectedCacheById: FinalTableInstance['selectedCacheById'];
+	selectedCacheById: FinalTableInstance<D>['selectedCacheById'];
 	refs: UseRowsRefsReturn['refs'];
 	highlightedRowRef: TableHighlightInstanceProps['highlightedRowRef'];
-	prepareRow: PrepareRow;
-	rows: Row[];
-	itemSize: GetItemSize;
+	itemSize: GetItemSize<D>;
 	state: TableState;
 	initializeRef: UseRowsRefsReturn['initializeRef'];
 	deleteRef: UseRowsRefsReturn['deleteRef'];
 	isItemLoaded: (index: number) => boolean;
-	rowProps?: RowProps;
-	RenderItem?: FC;
-	ItemLoader?: FC;
-};
+	RenderItem: RenderVirtualizedTableBodyProps<D, E>['RenderItem'];
+	ItemLoader: Required<RenderVirtualizedTableBodyProps<D, E>>['ItemLoader'];
+} & E;
 
 const RenderVirtualizedTableBody =
-	({
+	<D extends object, ExtraItemProps extends object = {}>({
 		outerRef,
 		rows,
 		getItemSize,
@@ -93,7 +96,7 @@ const RenderVirtualizedTableBody =
 		width,
 		height,
 		loadPerPage = 10,
-	}: RenderVirtualizedTableBodyProps) =>
+	}: RenderVirtualizedTableBodyProps<D, ExtraItemProps>) =>
 	(provided: DroppableProvided): ReactElement => {
 		const { innerRef, droppableProps } = provided;
 
@@ -137,8 +140,7 @@ const RenderVirtualizedTableBody =
 				: getItemSize;
 		};
 
-		const itemData: DefaultExtraItemData = {
-			...itemExtraData,
+		const itemData: DefaultExtraItemData<D, {}> = {
 			provided,
 			getRowId,
 			selectedCacheById,
@@ -154,6 +156,7 @@ const RenderVirtualizedTableBody =
 			isItemLoaded,
 			ItemLoader,
 			rowProps,
+			...itemExtraData,
 		};
 
 		const itemKey = (index: number) => {
