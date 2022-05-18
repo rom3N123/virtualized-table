@@ -1,42 +1,97 @@
-import React, { FC, ReactElement, forwardRef, memo, useMemo } from 'react';
+import React, {
+	FC,
+	ReactElement,
+	forwardRef,
+	memo,
+	useImperativeHandle,
+	Ref,
+	ForwardedRef,
+} from 'react';
 import { VIRTUALIZED_TABLE_PLUGINS } from './VirtualizedTable.constants';
 import {
 	Column,
+	FinalTableInstance,
 	GetRowId,
 	PluginHook,
+	Row,
 	useBlockLayout,
 	useExpanded,
 	useTable,
 } from 'react-table';
-import NonVirtualizedTable from '../NonVirtualizedTable/NonVirtualizedTable';
-import RenderVirtualizedTable from './renderComponents/RenderVirtualizedTable';
-import RenderVirtualizedTableBody from './renderComponents/RenderVirtualizedTableBody';
 import { HeaderRowProps } from '../../HeaderRow/HeaderRow';
 import VirtualizedTableBody from './components/VirtualizedTableBody';
+import { VariableSizeList } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { RenderVirtualizedTableBodyProps } from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 
-type VirtualizedTableProps = {
-	data: object[];
+export type GetItemSize =
+	| number
+	| ((row: Row, tableRef: ForwardedRef<TableRefValue>) => number);
+
+export type RowProps = object | ((row: Row) => object);
+
+export type VirtualizedTableProps<D extends object = {}> = {
+	data: D[];
 	columns: Column[];
-	getRowId: GetRowId;
+	getRowId: GetRowId<D>;
+	getItemSize: GetItemSize;
+	headerHeight: number;
+
 	extraPlugins?: PluginHook<{}, {}>[];
-	HeaderRow: FC<HeaderRowProps>;
-	TableBody: FC;
+	TableBody?: FC<RenderVirtualizedTableBodyProps>;
+	HeaderRow?: FC<HeaderRowProps>;
+	TableRow?: FC;
+	listRef?: Ref<VariableSizeList>;
+	RenderItem?: FC;
+	ItemLoader?: FC;
+	isLoadingNextPage?: boolean;
+	onLoadPage?: () => any;
+	loadPerPage?: number;
+	hasNextPage?: boolean;
+	rowProps?: RowProps;
+	className?: string;
+	itemExtraData?: object;
 };
 
-const VirtualizedTable: FC = memo(
-	forwardRef<{}, VirtualizedTableProps>(
+export type TableRefValue = {
+	instance: FinalTableInstance;
+	changeTableSelectionMode: FinalTableInstance['changeTableSelectionMode'];
+	enableTableSelectionMode: FinalTableInstance['enableTableSelectionMode'];
+	disableTableSelectionMode: FinalTableInstance['disableTableSelectionMode'];
+	selectedArray: FinalTableInstance['selectedCacheArrayRef']['current'];
+	selectedObject: FinalTableInstance['selectedCacheById'];
+	highlightedRow: FinalTableInstance['highlightedRowRef']['current']['value'];
+	clearSelectedRows: FinalTableInstance['clearSelectedRows'];
+	deleteRowsFromSelected: FinalTableInstance['deleteRowsFromSelected'];
+};
+
+const VirtualizedTable = memo(
+	forwardRef<TableRefValue, VirtualizedTableProps>(
 		(
 			{
 				data,
 				columns,
 				getRowId,
-				extraPlugins = [],
 				HeaderRow,
+				getItemSize,
+				headerHeight,
+				ItemLoader,
+				RenderItem,
+				hasNextPage,
+				itemExtraData,
+				listRef,
+				isLoadingNextPage,
+				loadPerPage,
+				rowProps,
+				onLoadPage,
 				TableBody = VirtualizedTableBody,
+				extraPlugins = [],
 				...useTableProps
 			},
 			ref
 		): ReactElement => {
+			const plugins = [...VIRTUALIZED_TABLE_PLUGINS, ...extraPlugins];
+
 			const instance = useTable(
 				{
 					data,
@@ -47,35 +102,57 @@ const VirtualizedTable: FC = memo(
 				useBlockLayout,
 				useExpanded,
 				// useSticky,
-				...extraPlugins
-			);
+				...plugins
+			) as FinalTableInstance;
 
-			const {
-				getTableBodyProps,
-				headerGroups,
-				rows,
-				prepareRow,
-				totalColumnsWidth,
-			} = instance;
+			useImperativeHandle(ref, () => {
+				return {
+					instance,
+					changeTableSelectionMode: instance.changeTableSelectionMode,
+					enableTableSelectionMode: instance.enableTableSelectionMode,
+					disableTableSelectionMode: instance.disableTableSelectionMode,
+					selectedArray: instance.selectedCacheArrayRef.current,
+					selectedObject: instance.selectedCacheById,
+					highlightedRow: instance.highlightedRowRef.current.value,
+					clearSelectedRows: instance.clearSelectedRows,
+					getSelectedRows: instance.getSelectedRows,
+					deleteRowsFromSelected: instance.deleteRowsFromSelected,
+				};
+			});
 
-			const plugins = useMemo(
-				() => [...VIRTUALIZED_TABLE_PLUGINS, ...extraPlugins],
-				[extraPlugins]
-			);
+			const { getTableBodyProps, headerGroups, rows, prepareRow } =
+				instance as FinalTableInstance;
 
 			return (
-				<div>
-					<HeaderRow headerGroups={headerGroups} />
+				<AutoSizer>
+					{({ width, height }) => (
+						<>
+							<HeaderRow headerGroups={headerGroups} />
 
-					<TableBody />
-				</div>
-				// <NonVirtualizedTable
-				// 	ref={ref}
-				// 	renderTable={RenderVirtualizedTable}
-				// 	renderTableBody={RenderVirtualizedTableBody(props)}
-				// 	{...props}
-				// 	extraPlugins={plugins}
-				// />
+							<TableBody
+								tableRef={ref}
+								getItemSize={getItemSize}
+								getRowId={getRowId}
+								instance={instance}
+								width={width}
+								height={height}
+								getTableBodyProps={getTableBodyProps}
+								headerHeight={headerHeight}
+								prepareRow={prepareRow}
+								ItemLoader={ItemLoader}
+								rows={rows}
+								RenderItem={RenderItem}
+								hasNextPage={hasNextPage}
+								itemExtraData={itemExtraData}
+								listRef={listRef}
+								isLoadingNextPage={isLoadingNextPage}
+								loadPerPage={loadPerPage}
+								rowProps={rowProps}
+								onLoadPage={onLoadPage}
+							/>
+						</>
+					)}
+				</AutoSizer>
 			);
 		}
 	)

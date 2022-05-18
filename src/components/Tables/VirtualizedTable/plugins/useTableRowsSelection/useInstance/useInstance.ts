@@ -17,6 +17,8 @@ export type TableRowsSelectionInstanceProps = {
 	toggleAllRowsSelected: () => void;
 	getIsSelectedRow: (row: Row) => boolean;
 	clearSelectedRows: () => void;
+	deleteRowsFromSelected: (rowsIds: (number | string)[]) => void;
+	getSelectedRows: () => Row[];
 };
 
 const useInstance = (
@@ -72,6 +74,22 @@ const useInstance = (
 		selectedCacheArrayRef.current.value = [];
 
 		areAllRowsSelectedObservable.set(false);
+	};
+
+	const deleteRowsFromSelected = (rowsIds: (number | string)[]) => {
+		if (rows.length === rowsIds.length) {
+			selectedCacheByIdRef.current = {};
+			selectedCacheArrayRef.current.value = [];
+		} else {
+			for (const rowId of rowsIds) {
+				delete selectedCacheByIdRef.current[rowId];
+			}
+
+			selectedCacheArrayRef.current.value =
+				selectedCacheArrayRef.current.value.filter(
+					row => !rowsIds.includes(row.id)
+				);
+		}
 	};
 
 	const toggleRowSelected = (index: number) => {
@@ -134,6 +152,10 @@ const useInstance = (
 		}
 	}, [isSelectionMode]);
 
+	const getSelectedRows = () => {
+		return selectedCacheArrayRef.current.value.map(row => rowsById[row.id]);
+	};
+
 	const instanceProps: TableRowsSelectionInstanceProps = {
 		areAllRowsSelectedObservable,
 		selectedCacheById: selectedCacheByIdRef.current,
@@ -142,6 +164,8 @@ const useInstance = (
 		toggleAllRowsSelected,
 		getIsSelectedRow,
 		clearSelectedRows,
+		deleteRowsFromSelected,
+		getSelectedRows,
 	};
 
 	Object.assign(instance, instanceProps);
