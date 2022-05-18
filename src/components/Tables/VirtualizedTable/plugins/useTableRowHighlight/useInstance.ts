@@ -1,179 +1,128 @@
 import { ProxyTarget } from './../utils';
-import { USE_TABLE_CORE_PLUGIN_NAME } from './../useTableCore/useTableCore';
-/* eslint-disable import/no-cycle, max-len */
-import { MutableRefObject, useEffect, useState } from 'react';
+import { USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME } from './useTableRowHighlight';
+import { USE_TABLE_SELECTION_MODE_PLUGIN_NAME } from './../useTableSelectionMode/useTableSelectionMode';
+import { useEffect, useRef, MutableRefObject } from 'react';
 import { ensurePluginOrder, Row } from 'react-table';
 import useObservable from '../../../../../hooks/useObservable';
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection/useTableRowsSelection';
 import { TableInstance } from 'react-table';
 import { UseRowsRefsReturn } from '../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import { TableSelectionModeInstanceProps } from '../useTableSelectionMode/useInstance';
-import useSelectedRowsRefs from '../useTableRowsSelection/useInstance/hooks/useSelectedRowsRefs';
-import Observable from '../../../../../helpers/Observable';
+import useHighlightedRowRef from './hooks/useHighlightedRowRef';
 
-export type TableRowsSelectionInstanceProps = {
-	areAllRowsSelectedObservable: Observable<boolean>;
-	selectedCacheById: MutableRefObject<ProxyTarget<Record<string, object>>>;
-	selectedCacheArrayRef: MutableRefObject<ProxyTarget<Record<string, object>>>;
-	toggleRowSelected: (index: number) => void;
-	toggleAllRowsSelected: () => void;
-	getIsSelectedRow: (row: Row) => boolean;
-	clearSelectedRows: () => void;
-	deleteRowsFromSelected: (rowsIds: (string | number)[]) => void;
-	getSelectedRows: () => Row[];
+export type OnHighlightRowOptions = {
+	shouldForceHighlight: boolean;
+};
+
+export type TableHighlightInstanceProps = {
+	highlightedRowRef: MutableRefObject<ProxyTarget<Row | null>>;
+	previousHighlightedRowIdRef: MutableRefObject<string | null>;
+	onHighlightRow: (index: number, options?: OnHighlightRowOptions) => void;
+	highlightRowById: (rowId: number | string) => void;
 };
 
 const useInstance = (
 	instance: TableInstance & UseRowsRefsReturn & TableSelectionModeInstanceProps
 ) => {
-	const {
-		rows,
-		refs,
-		getRowRef,
-		plugins,
-		isSelectionModeObservable,
-		rowsById,
-		preselectedRows,
-		getRowId,
-	} = instance;
-
-	const { selectedCacheByIdRef, selectedCacheArrayRef } = useSelectedRowsRefs();
-	const [areAllRowsSelectedObservable] = useState<Observable<boolean>>(
-		new Observable<boolean>(false)
-	);
-
+	const { rows, plugins, rowsById, getRowRef, isSelectionModeObservable } =
+		instance;
 	const isSelectionMode = useObservable(isSelectionModeObservable);
+
+	const { highlightedRowRef } = useHighlightedRowRef();
+
+	const previousHighlightedRowIdRef: TableHighlightInstanceProps['previousHighlightedRowIdRef'] =
+		useRef<string | null>(null);
 
 	ensurePluginOrder(
 		plugins,
-		[USE_TABLE_CORE_PLUGIN_NAME],
-		USE_TABLE_ROWS_SELECTION_PLUGIN_NAME
+		[
+			USE_TABLE_SELECTION_MODE_PLUGIN_NAME,
+			USE_TABLE_ROWS_SELECTION_PLUGIN_NAME,
+		],
+		USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME
 	);
 
-	/**
-	 * FIXME
-	 */
-	// useEffect(() => {
-	// 	if (preselectedRows?.length) {
-	// 		const instanceRows = preselectedRows
-	// 			.map(selectedRow => getRowId(selectedRow))
-	// 			.map(rowId => rowsById[rowId]);
-
-	// 		for (const instanceRow of instanceRows) {
-	// 			selectedCacheByIdRef.current[instanceRow.id] = instanceRow;
-	// 		}
-	// 		selectedCacheArrayRef.current.value = [
-	// 			...instanceRows,
-	// 			...selectedCacheArrayRef.current.value,
-	// 		];
-	// 	}
-	// }, [preselectedRows]);
-
-	const clearSelectedRows = () => {
-		for (const rowId in refs.current) {
-			const { current } = getRowRef(rowId);
-
-			current?.setIsSelected(false);
-		}
-
-		selectedCacheByIdRef.current = {};
-
-		selectedCacheArrayRef.current.value = [];
-
-		areAllRowsSelectedObservable.set(false);
-	};
-
-	const deleteRowsFromSelected = (rowsIds: (number | string)[]) => {
-		if (rows.length === rowsIds.length) {
-			selectedCacheByIdRef.current = {};
-			selectedCacheArrayRef.current.value = [];
-		} else {
-			for (const rowId of rowsIds) {
-				delete selectedCacheByIdRef.current[rowId];
-			}
-
-			selectedCacheArrayRef.current.value =
-				selectedCacheArrayRef.current.value.filter(
-					row => !rowsIds.includes(row.id)
-				);
-		}
-	};
-
-	const toggleRowSelected = (index: number) => {
-		const row = rows[index];
-		const { id } = row;
-		const isSelected = Boolean(selectedCacheByIdRef.current[id]);
-		const rowRef = getRowRef(id);
-
-		rowRef?.current?.setIsSelected(prevState => !prevState);
-
-		if (isSelected) {
-			delete selectedCacheByIdRef.current[id];
-
-			selectedCacheArrayRef.current.value =
-				selectedCacheArrayRef.current.value.filter(row => row.id !== id);
-
-			if (areAllRowsSelectedObservable.get()) {
-				areAllRowsSelectedObservable.set(false);
-			}
-		} else {
-			selectedCacheArrayRef.current.value = [
-				...selectedCacheArrayRef.current.value,
-				row,
-			];
-			selectedCacheByIdRef.current[id] = row;
-
-			if (selectedCacheArrayRef.current.value.length === rows.length) {
-				areAllRowsSelectedObservable.set(true);
-			}
-		}
-	};
-
-	const toggleAllRowsSelected = () => {
-		if (selectedCacheArrayRef.current.value.length !== rows.length) {
-			for (const rowId in refs.current) {
-				const { current } = getRowRef(rowId);
-
-				current?.setIsSelected(true);
-			}
-
-			selectedCacheByIdRef.current = rowsById;
-			selectedCacheArrayRef.current.value = rows;
-
-			areAllRowsSelectedObservable.set(true);
-		} else {
-			clearSelectedRows();
-		}
-	};
-
-	const getIsSelectedRow = ({ id }: Row) =>
-		Boolean(selectedCacheByIdRef.current[id]);
+	const getIsPreviousHighlightedRowExists = () =>
+		previousHighlightedRowIdRef.current !== null;
 
 	useEffect(() => {
-		if (
-			!isSelectionMode &&
-			selectedCacheArrayRef.current.value.length &&
-			!preselectedRows?.length
-		) {
-			clearSelectedRows();
+		if (highlightedRowRef.current.value) {
+			const rowRef = getRowRef(highlightedRowRef.current.value.id);
+
+			rowRef?.current?.setIsHighlighted(false);
+			highlightedRowRef.current.value = null;
+		}
+
+		if (getIsPreviousHighlightedRowExists()) {
+			previousHighlightedRowIdRef.current = null;
 		}
 	}, [isSelectionMode]);
 
-	const getSelectedRows = () => {
-		return selectedCacheArrayRef.current.value.map(row => rowsById[row.id]);
+	const getPreviousHighlightedRowInfo = () => {
+		if (getIsPreviousHighlightedRowExists()) {
+			const row = rowsById[previousHighlightedRowIdRef.current!];
+			const ref = getRowRef(row?.id);
+
+			return {
+				previousHighlightedRow: row,
+				previousHighlightedRowRef: ref,
+			};
+		}
+
+		return {};
 	};
 
-	Object.assign(instance, {
-		areAllRowsSelectedObservable,
-		selectedCacheById: selectedCacheByIdRef.current,
-		selectedCacheArrayRef,
-		toggleRowSelected,
-		toggleAllRowsSelected,
-		getIsSelectedRow,
-		clearSelectedRows,
-		deleteRowsFromSelected,
-		getSelectedRows,
-	});
+	const onHighlightRow: TableHighlightInstanceProps['onHighlightRow'] = (
+		index,
+		options = { shouldForceHighlight: false }
+	) => {
+		const row = rows[index];
+		const rowRef = getRowRef(row.id);
+
+		const { previousHighlightedRow, previousHighlightedRowRef } =
+			getPreviousHighlightedRowInfo();
+
+		if (row.id !== previousHighlightedRow?.id || options.shouldForceHighlight) {
+			highlightedRowRef.current.value = row;
+
+			if (getIsPreviousHighlightedRowExists()) {
+				previousHighlightedRowRef?.current?.setIsHighlighted(false);
+			}
+
+			rowRef?.current?.setIsHighlighted(true);
+
+			previousHighlightedRowIdRef.current = row.id;
+		} else {
+			highlightedRowRef.current.value = null;
+			previousHighlightedRowRef?.current?.setIsHighlighted(false);
+			previousHighlightedRowIdRef.current = null;
+		}
+	};
+
+	/**
+	 * @param {React.ReactText} rowId id строки в instance
+	 * @param {object} options
+	 * @param {boolean} options.shouldForceHighlight Если строка уже выделена у неё не будет снято выделение
+	 */
+	const highlightRowById: TableHighlightInstanceProps['highlightRowById'] = (
+		rowId,
+		options = { shouldForceHighlight: true }
+	) => {
+		const row = rowsById[rowId];
+
+		if (row) {
+			onHighlightRow(row.index, options);
+		}
+	};
+
+	const instanceProps: TableHighlightInstanceProps = {
+		highlightedRowRef,
+		previousHighlightedRowIdRef,
+		onHighlightRow,
+		highlightRowById,
+	};
+
+	Object.assign(instance, instanceProps);
 };
 
 export default useInstance;

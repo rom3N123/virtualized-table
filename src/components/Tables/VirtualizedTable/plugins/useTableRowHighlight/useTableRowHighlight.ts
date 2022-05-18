@@ -1,5 +1,4 @@
 import { PluginHook } from 'react-table';
-/* eslint-disable import/no-cycle */
 import prepareRow from './prepareRow';
 import useInstance from './useInstance';
 

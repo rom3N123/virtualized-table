@@ -1,9 +1,18 @@
-import { PluginPrepareRow } from 'react-table';
+import { TableHighlightInstanceProps } from './useInstance';
+import { PluginPrepareRow, TableInstance } from 'react-table';
 
-const prepareRow: PluginPrepareRow = (row, { instance }) => {
-	row.onHighlightRow = instance.onHighlightRow;
-	row.highlightedRow = instance.highlightedRow;
-	row.previousHighlightedRowIndex = instance.previousHighlightedRowIndex;
+export type TableHighlightRowProps = Pick<
+	TableHighlightInstanceProps,
+	'onHighlightRow'
+>;
+
+const prepareRow: PluginPrepareRow<TableHighlightRowProps> = (
+	row,
+	{ instance }
+) => {
+	const _instance = instance as TableInstance & TableHighlightRowProps;
+
+	row.onHighlightRow = _instance.onHighlightRow;
 };
 
 export default prepareRow;

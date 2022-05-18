@@ -2,7 +2,6 @@ import { ProxyTarget } from './../../utils';
 import { UseRowsRefsReturn } from './../../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import { TableSelectionModeInstanceProps } from './../../useTableSelectionMode/useInstance';
 import { USE_TABLE_CORE_PLUGIN_NAME } from './../../useTableCore/useTableCore';
-/* eslint-disable max-len, guard-for-in, no-restricted-syntax */
 import { useEffect, useState, MutableRefObject } from 'react';
 import useObservable from '../../../../../../hooks/useObservable';
 import Observable from '../../../../../../helpers/Observable';
