@@ -5,8 +5,8 @@ import TableRow from '../../components/TableRow';
 import { RenderItemProps } from '../../VirtualizedTable';
 import { RowRefMethods } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 
-function RenderTableRow<D extends object, E extends object = {}>(
-	{ index, style, data }: RenderItemProps<D, E>,
+function RenderTableRow(
+	{ index, style, data }: RenderItemProps,
 	ref: ForwardedRef<RowRefMethods>
 ) {
 	const {

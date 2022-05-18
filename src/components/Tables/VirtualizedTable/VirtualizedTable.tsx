@@ -58,7 +58,7 @@ export type VirtualizedTableProps<
 	HeaderRow?: FC<HeaderRowProps>;
 	TableRow?: FC;
 	listRef?: Ref<VariableSizeList>;
-	RenderItem?: ForwardRefExoticComponent<RenderItemProps<D, ExtraItemProps>>;
+	RenderItem?: ForwardRefExoticComponent<RenderItemProps>;
 	ItemLoader?: FC<RenderItemProps>;
 	isLoadingNextPage?: boolean;
 	onLoadPage?: () => any;
