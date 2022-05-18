@@ -21,7 +21,7 @@ type Instance = TableInstance &
 type OnRowClick = (index: number, event: MouseEvent) => void;
 type KeyboardClickWrapper = (cb: AnyCb) => OnRowClick;
 
-type TableLinkHighlightRowWithSelectionInstanceProps = {
+export type TableLinkHighlightRowWithSelectionInstanceProps = {
 	onHighlightRow: OnRowClick;
 	toggleRowSelected: OnRowClick;
 };

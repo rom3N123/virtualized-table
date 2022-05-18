@@ -1,44 +1,74 @@
-import React, { FC, MutableRefObject, ReactElement, Ref, useRef } from 'react';
+import React, {
+	FC,
+	ForwardedRef,
+	MutableRefObject,
+	ReactElement,
+	Ref,
+	useRef,
+} from 'react';
 import { DroppableProvided } from 'react-beautiful-dnd';
 import {
+	FinalTableInstance,
 	GetRowId,
 	GetTableBodyProps,
 	PrepareRow,
 	Row,
-	UseTableInstanceProps,
+	TableState,
 	UseTableRows,
 } from 'react-table';
 import { VariableSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
+import { UseRowsRefsReturn } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
+import { TableHighlightInstanceProps } from '../../plugins/useTableRowHighlight/useInstance';
 import RenderVirtualizedTableRowWithRef from '../../renderComponents/RenderVirtualizedTableRow/RenderVirtualizedTableRowWithRef';
+import {
+	GetItemSize,
+	RowProps,
+	TableRefValue,
+	VirtualizedTableProps,
+} from '../../VirtualizedTable';
 
-export type RowProps = object | ((row: Row) => object);
-export type GetItemSize = number | ((row: Row) => number);
-
-export type RenderVirtualizedTableBodyProps = {
+export type RenderVirtualizedTableBodyProps = Pick<
+	VirtualizedTableProps,
+	| 'getItemSize'
+	| 'getRowId'
+	| 'rowProps'
+	| 'hasNextPage'
+	| 'listRef'
+	| 'isLoadingNextPage'
+	| 'headerHeight'
+	| 'itemExtraData'
+	| 'RenderItem'
+	| 'ItemLoader'
+	| 'loadPerPage'
+	| 'onLoadPage'
+> & {
 	getTableBodyProps: GetTableBodyProps;
 	rows: UseTableRows;
 	prepareRow: PrepareRow;
-	getRowId: GetRowId;
-	TableRow: FC;
-	outerRef: Ref<HTMLDivElement>;
-	getItemSize: GetItemSize;
-	headerHeight: number;
+	instance: FinalTableInstance;
+	tableRef: ForwardedRef<TableRefValue>;
 	width: number;
 	height: number;
-	instance: UseTableInstanceProps<object>;
-	tableRef: MutableRefObject<{}>;
+	outerRef?: Ref<HTMLDivElement>;
+};
 
-	listRef?: Ref<VariableSizeList>;
+export type DefaultExtraItemData<D extends object = {}> = D & {
+	provided: DroppableProvided;
+	getRowId: GetRowId;
+	selectedCacheById: FinalTableInstance['selectedCacheById'];
+	refs: UseRowsRefsReturn['refs'];
+	highlightedRowRef: TableHighlightInstanceProps['highlightedRowRef'];
+	prepareRow: PrepareRow;
+	rows: Row[];
+	itemSize: GetItemSize;
+	state: TableState;
+	initializeRef: UseRowsRefsReturn['initializeRef'];
+	deleteRef: UseRowsRefsReturn['deleteRef'];
+	isItemLoaded: (index: number) => boolean;
+	rowProps?: RowProps;
 	RenderItem?: FC;
 	ItemLoader?: FC;
-	isLoadingNextPage?: boolean;
-	onLoadPage?: () => any;
-	loadPerPage?: number;
-	hasNextPage?: boolean;
-	rowProps?: RowProps;
-	className?: string;
-	itemExtraData?: object;
 };
 
 const RenderVirtualizedTableBody =
@@ -53,15 +83,16 @@ const RenderVirtualizedTableBody =
 		hasNextPage,
 		listRef,
 		isLoadingNextPage,
-		width,
-		height,
 		headerHeight,
 		itemExtraData,
 		instance,
 		RenderItem,
 		ItemLoader,
-		loadPerPage = 10,
 		onLoadPage,
+		tableRef,
+		width,
+		height,
+		loadPerPage = 10,
 	}: RenderVirtualizedTableBodyProps) =>
 	(provided: DroppableProvided): ReactElement => {
 		const { innerRef, droppableProps } = provided;
@@ -69,8 +100,8 @@ const RenderVirtualizedTableBody =
 		const resultListRef = listRef || useRef<VariableSizeList>(null);
 
 		const {
-			selectedCacheRef,
-			rowsRefs,
+			selectedCacheById,
+			refs,
 			highlightedRowRef,
 			state,
 			initializeRef,
@@ -102,33 +133,32 @@ const RenderVirtualizedTableBody =
 
 		const itemSize = (index: number): number => {
 			return typeof getItemSize === 'function'
-				? getItemSize(tableRef.current.instance.rows[index], tableRef)
+				? getItemSize(rows[index], tableRef)
 				: getItemSize;
 		};
 
-		const itemData = {
+		const itemData: DefaultExtraItemData = {
 			...itemExtraData,
 			provided,
 			getRowId,
-			selectedCacheRef,
-			rowsRefs,
+			selectedCacheById,
+			refs,
 			highlightedRowRef,
 			prepareRow,
 			rows,
-			itemSize,
+			itemSize: getItemSize,
 			state,
 			initializeRef,
 			deleteRef,
 			RenderItem,
 			isItemLoaded,
 			ItemLoader,
+			rowProps,
 		};
 
 		const itemKey = (index: number) => {
 			if (isItemLoaded(index)) {
-				return getRowId(rows[index]);
-
-				// return getRowId(rows[index], tableRef);
+				return getRowId(rows[index], tableRef);
 			}
 
 			return index;
