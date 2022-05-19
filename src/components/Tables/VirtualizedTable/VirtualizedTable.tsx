@@ -29,6 +29,7 @@ import {
 } from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 import RenderVirtualizedTableRow from './renderComponents/RenderVirtualizedTableRow';
 import LoadingItem from '../../LoadingItem';
+import { RowRef } from './plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 
 export type GetItemSize<D extends object> =
 	| number
@@ -40,6 +41,16 @@ export type RenderItemProps<
 	D extends object = {},
 	ExtraItemProps extends object = {}
 > = ListChildComponentProps<DefaultExtraItemData<D, ExtraItemProps>>;
+
+export type RenderItemPropsWithRef<
+	D extends object = {},
+	E extends object = {}
+> = RenderItemProps<D, E> & { ref: RowRef };
+
+export type RenderItem<WithRefProp extends boolean = false> =
+	ForwardRefExoticComponent<
+		RenderItemProps & (WithRefProp extends true ? { ref: RowRef } : {})
+	>;
 
 export type VirtualizedTableProps<
 	D extends object = {},
@@ -53,13 +64,13 @@ export type VirtualizedTableProps<
 
 	extraPlugins?: PluginHook<{}, {}>[];
 	TableBody?: <D extends object, ExtraItemProps extends object = {}>(
-		props: RenderVirtualizedTableBodyProps<D, {}>
+		props: RenderVirtualizedTableBodyProps<D, ExtraItemProps>
 	) => ReactElement;
 	HeaderRow?: FC<HeaderRowProps>;
 	TableRow?: FC;
 	listRef?: Ref<VariableSizeList>;
-	RenderItem?: ForwardRefExoticComponent<RenderItemProps>;
-	ItemLoader?: FC<RenderItemProps>;
+	RenderItem?: RenderItem;
+	ItemLoader: FC<RenderItemProps>;
 	isLoadingNextPage?: boolean;
 	onLoadPage?: () => any;
 	loadPerPage?: number;
@@ -144,6 +155,7 @@ function VirtualizedTable<
 		<AutoSizer>
 			{({ width, height }) => (
 				<>
+					{/* @ts-ignore */}
 					<HeaderRow headerGroups={headerGroups} />
 
 					<TableBody<D, ExtraItemProps>

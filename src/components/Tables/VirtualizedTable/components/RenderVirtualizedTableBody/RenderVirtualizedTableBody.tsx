@@ -51,11 +51,11 @@ export type RenderVirtualizedTableBodyProps<
 	height: number;
 	outerRef?: Ref<HTMLDivElement>;
 	RenderItem: Required<VirtualizedTableProps<D, ExtraItemProps>>['RenderItem'];
-	ItemLoader?: VirtualizedTableProps<D, ExtraItemProps>['ItemLoader'];
+	ItemLoader: FC<RenderItemProps>;
 };
 
 export type DefaultExtraItemData<
-	D extends object,
+	D extends object = {},
 	E extends object = {}
 > = Pick<
 	RenderVirtualizedTableBodyProps<D, E>,
@@ -71,7 +71,7 @@ export type DefaultExtraItemData<
 	deleteRef: UseRowsRefsReturn['deleteRef'];
 	isItemLoaded: (index: number) => boolean;
 	RenderItem: RenderVirtualizedTableBodyProps<D, E>['RenderItem'];
-	ItemLoader: Required<RenderVirtualizedTableBodyProps<D, E>>['ItemLoader'];
+	ItemLoader: FC<RenderItemProps>;
 } & E;
 
 const RenderVirtualizedTableBody =
@@ -140,7 +140,7 @@ const RenderVirtualizedTableBody =
 				: getItemSize;
 		};
 
-		const itemData: DefaultExtraItemData<D, {}> = {
+		const itemData: DefaultExtraItemData<D> = {
 			provided,
 			getRowId,
 			selectedCacheById,
@@ -161,7 +161,7 @@ const RenderVirtualizedTableBody =
 
 		const itemKey = (index: number) => {
 			if (isItemLoaded(index)) {
-				return getRowId(rows[index], tableRef);
+				return getRowId!(rows[index], index);
 			}
 
 			return index;

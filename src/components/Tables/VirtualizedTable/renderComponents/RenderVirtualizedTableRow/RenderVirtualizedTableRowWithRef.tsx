@@ -1,14 +1,16 @@
 /* eslint-disable max-len */
 import React, { memo, useEffect } from 'react';
-import { areEqual, ListChildComponentProps } from 'react-window';
-import { DefaultExtraItemData } from '../../components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
+import { areEqual } from 'react-window';
+import { RenderItemProps, RenderItem } from '../../VirtualizedTable';
 
-function RenderVirtualizedTableRowWithRef<D extends object>({
+function RenderVirtualizedTableRowWithRef({
 	index,
 	data,
 	...otherProps
-}: ListChildComponentProps<DefaultExtraItemData<D>>) {
+}: RenderItemProps) {
 	const { initializeRef, rows, deleteRef, RenderItem } = data;
+
+	const RenderItemWithRef = RenderItem as RenderItem<true>;
 
 	const rowId = rows[index]?.id;
 
@@ -20,7 +22,9 @@ function RenderVirtualizedTableRowWithRef<D extends object>({
 		};
 	}, []);
 
-	return <RenderItem ref={rowRef} index={index} data={data} {...otherProps} />;
+	return (
+		<RenderItemWithRef ref={rowRef} index={index} data={data} {...otherProps} />
+	);
 }
 
 export default memo(

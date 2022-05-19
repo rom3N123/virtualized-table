@@ -7,7 +7,9 @@ import RenderVirtualizedTableBody, {
 function VirtualizedTableBody<
 	D extends object,
 	ExtraItemProps extends object = {}
->({ ...props }: RenderVirtualizedTableBodyProps<D>): ReactElement {
+>({
+	...props
+}: RenderVirtualizedTableBodyProps<D, ExtraItemProps>): ReactElement {
 	return (
 		<DragDropContext onDragEnd={() => {}}>
 			<Droppable droppableId='table-droppable' mode='virtual'>
