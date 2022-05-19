@@ -1,3 +1,5 @@
+import { TableRowsSelectionInstanceProps } from './useInstance';
+import { TableLinkHighlightRowWithSelectionInstanceProps } from './../../useLinkHighlightRowWithSelection/useInstance';
 import { ProxyTarget } from './../../utils';
 import { UseRowsRefsReturn } from './../../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import { TableSelectionModeInstanceProps } from './../../useTableSelectionMode/useInstance';

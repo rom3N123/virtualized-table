@@ -1,6 +1,7 @@
 import React, { FC, ReactElement } from 'react';
-import { CellRenderer, Column } from 'react-table';
+import { Column, TableCellRenderer } from 'react-table';
 import VirtualizedTable from '../components/Tables/VirtualizedTable';
+import VirtualizedTableCheckboxCell from '../components/Tables/VirtualizedTable/cells/column/VirtualizedTableCheckboxCell';
 
 type Data = {
 	id: number;
@@ -8,17 +9,17 @@ type Data = {
 	age?: number;
 };
 
-const data: Data[] = [
-	{
-		name: 'Roman',
-	},
-].map(row => ({ ...row, id: Date.now() }));
+const getMockRows = (length: number) =>
+	Array.from({ length }, (_, i) => ({ id: i + 1, name: `Roman ${i + 1}` }));
 
-const NameCell: CellRenderer<Data, string> = ({ value }) => {
+const data: Data[] = getMockRows(10);
+
+const NameCell: TableCellRenderer<Data, string> = ({ value }) => {
 	return <div style={{ color: 'blue' }}>{value}</div>;
 };
 
 const columns: Column<Data>[] = [
+	{ id: 'dnd', Cell: VirtualizedTableCheckboxCell, accessor: 'age' },
 	{
 		id: '1',
 		accessor: 'name',

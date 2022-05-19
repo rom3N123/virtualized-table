@@ -6,7 +6,7 @@ import React, {
 	Ref,
 	useRef,
 } from 'react';
-import { DroppableProvided } from 'react-beautiful-dnd';
+import { DraggableProvided, DroppableProvided } from 'react-beautiful-dnd';
 import {
 	FinalTableInstance,
 	GetTableBodyProps,
@@ -53,6 +53,13 @@ export type RenderVirtualizedTableBodyProps<
 	outerRef?: Ref<HTMLDivElement>;
 	RenderItem: Required<VirtualizedTableProps<D, ExtraItemProps>>['RenderItem'];
 	ItemLoader: FC<RenderItemProps<D, ExtraItemProps>>;
+};
+
+export type RowCellRenderProps = {
+	isSelected: boolean;
+	isHighlighted: boolean;
+	draggableProps: DraggableProvided['draggableProps'];
+	dragHandleProps: DraggableProvided['dragHandleProps'];
 };
 
 export type DefaultExtraItemData<

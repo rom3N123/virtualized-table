@@ -6,6 +6,7 @@ import { UseTableSelectionModeRowProps } from './components/Tables/VirtualizedTa
 import 'react-table';
 import { TableHighlightInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableRowHighlight/useInstance';
 import { TableSelectionModeInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableSelectionMode/useInstance';
+import { RowCellRenderProps } from './components/Tables/VirtualizedTable/components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 
 declare module 'react-table' {
 	export interface TableOptions<D extends object>
@@ -29,21 +30,39 @@ declare module 'react-table' {
 
 	export type FinalTableInstance<
 		D extends object,
-		ExtraProps extends object = {}
+		E extends object = {}
 	> = TableInstanceWithProps<
 		D,
 		TableCoreInstanceProps &
-			TableLinkHighlightRowWithSelectionInstanceProps &
 			TableHighlightInstanceProps &
 			TableRowsSelectionInstanceProps &
 			TableSelectionModeInstanceProps &
-			ExtraProps
+			TableLinkHighlightRowWithSelectionInstanceProps &
+			E
 	>;
 
-	export type CellRenderer<
+	export type FinalCellProps<
 		D extends object,
-		V extends any
-	> = ColumnInterfaceBasedOnValue<D, V>['Cell'];
+		V = any,
+		E extends object = {}
+	> = FinalTableInstance<D, E> & {
+		column: ColumnInstance<D>;
+		row: Row<D>;
+		cell: Cell<D, V>;
+		value: CellValue<V>;
+	};
+	export type TableColumnInterfaceBasedOnValue<
+		D extends object = {},
+		V = any
+	> = {
+		Cell?: Renderer<FinalCellProps<D, V>> | undefined;
+	};
+
+	export type TableCellRenderer<
+		D extends object,
+		V extends any,
+		E extends object = RowCellRenderProps
+	> = Renderer<FinalCellProps<D, V, E>> | undefined;
 
 	export interface Hooks<D extends object = {}, P extends object>
 		extends UseTableHooks<D> {
@@ -58,6 +77,9 @@ declare module 'react-table' {
 		(hooks: Hooks<D, P>): void;
 	}
 
+	export interface UseTableColumnOptions<D extends object> {
+		Cell?: TableCellRenderer<D>;
+	}
 	export interface UseTableColumnProps<D extends object>
 		extends UseResizeColumnsColumnProps<D>,
 			UseSortByColumnProps<D>,

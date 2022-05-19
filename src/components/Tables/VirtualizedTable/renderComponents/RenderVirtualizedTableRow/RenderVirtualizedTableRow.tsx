@@ -4,6 +4,7 @@ import useRenderRowHighlight from './useRenderRowHighlight';
 import TableRow from '../../components/TableRow';
 import { RenderItemProps } from '../../VirtualizedTable';
 import { RowRefMethods } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
+import { RowCellRenderProps } from '../../components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 
 function RenderTableRow<D extends object = {}, E extends object = {}>(
 	{ index, style, data }: RenderItemProps<D, E>,
@@ -27,6 +28,8 @@ function RenderTableRow<D extends object = {}, E extends object = {}>(
 
 	const { original } = row;
 
+	prepareRow(row);
+
 	const { isSelected, setIsSelected, isHighlighted, setIsHighlighted } =
 		useRenderRowHighlight({
 			highlightedRowRef,
@@ -34,8 +37,6 @@ function RenderTableRow<D extends object = {}, E extends object = {}>(
 		});
 
 	const isHighlightedOrSelected = isHighlighted || isSelected;
-
-	prepareRow(row);
 
 	useImperativeHandle(ref, () => ({
 		row,
@@ -56,6 +57,13 @@ function RenderTableRow<D extends object = {}, E extends object = {}>(
 				const { style: draggableStyles, ...otherDraggableProps } =
 					draggableProps;
 
+				const renderProps: RowCellRenderProps = {
+					isSelected,
+					isHighlighted: isHighlightedOrSelected,
+					draggableProps,
+					dragHandleProps,
+				};
+
 				return (
 					<TableRow
 						innerRef={innerRef}
@@ -63,10 +71,7 @@ function RenderTableRow<D extends object = {}, E extends object = {}>(
 						onClick={onHighlightRowHandler}
 						row={row}
 						renderProps={{
-							isSelected,
-							isHighlighted: isHighlightedOrSelected,
-							draggableProps,
-							dragHandleProps,
+							...renderProps,
 							...data,
 						}}
 						{...otherDraggableProps}

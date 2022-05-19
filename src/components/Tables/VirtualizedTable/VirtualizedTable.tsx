@@ -6,7 +6,6 @@ import React, {
 	useImperativeHandle,
 	Ref,
 	ForwardedRef,
-	ForwardRefExoticComponent,
 } from 'react';
 import { VIRTUALIZED_TABLE_PLUGINS } from './VirtualizedTable.constants';
 import {
@@ -151,8 +150,7 @@ function VirtualizedTable<
 		};
 	});
 
-	const { getTableBodyProps, headerGroups, rows, prepareRow } =
-		instance as FinalTableInstance<D>;
+	const { getTableBodyProps, headerGroups, rows, prepareRow } = instance;
 
 	return (
 		<AutoSizer>

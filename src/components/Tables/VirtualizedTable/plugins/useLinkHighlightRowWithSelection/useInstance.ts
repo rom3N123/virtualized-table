@@ -18,7 +18,7 @@ type Instance = TableInstance &
 		shouldForceHighlight?: boolean;
 	};
 
-type OnRowClick = (index: number, event: MouseEvent) => void;
+type OnRowClick = (index: number, event?: MouseEvent) => void;
 type KeyboardClickWrapper = (cb: AnyCb) => OnRowClick;
 
 export type TableLinkHighlightRowWithSelectionInstanceProps = {
