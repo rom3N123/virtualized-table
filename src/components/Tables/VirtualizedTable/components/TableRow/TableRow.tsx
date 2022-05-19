@@ -1,7 +1,8 @@
 import React, { FC, MouseEventHandler, ReactElement } from 'react';
-import styles from './TableRow.module.scss';
+import './TableRow.scss';
 import { DroppableProvided } from 'react-beautiful-dnd';
 import { Row } from 'react-table';
+import clsx from 'clsx';
 
 type TableRowProps = {
 	innerRef: DroppableProvided['innerRef'];
@@ -21,13 +22,9 @@ const TableRow: FC<TableRowProps> = ({
 }): ReactElement => {
 	const { cells } = row;
 
-	const tableRowClassNames = [styles.row, isHighlighted && 'highlighted']
-		.filter(Boolean)
-		.join(' ');
-
 	return (
 		<tr
-			className={tableRowClassNames}
+			className={clsx(['row', isHighlighted && 'highlighted'])}
 			ref={innerRef}
 			onClick={onClick}
 			{...otherRowProps}
@@ -39,7 +36,7 @@ const TableRow: FC<TableRowProps> = ({
 
 				return (
 					<td
-						className={styles.rowData}
+						className='rowData'
 						width={width}
 						// {...cellProps}
 						{...getCellProps()}

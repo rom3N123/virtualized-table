@@ -1,16 +1,14 @@
-/* eslint-disable max-len */
 import React, { memo, useEffect } from 'react';
 import { areEqual } from 'react-window';
 import { RenderItemProps, RenderItem } from '../../VirtualizedTable';
 
-function RenderVirtualizedTableRowWithRef({
-	index,
-	data,
-	...otherProps
-}: RenderItemProps) {
+function RenderVirtualizedTableRowWithRef<
+	D extends object,
+	E extends object = {}
+>({ index, data, ...otherProps }: RenderItemProps<D, E>) {
 	const { initializeRef, rows, deleteRef, RenderItem } = data;
 
-	const RenderItemWithRef = RenderItem as RenderItem<true>;
+	const RenderItemWithRef = RenderItem as RenderItem<D, E, true>;
 
 	const rowId = rows[index]?.id;
 

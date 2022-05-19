@@ -21,6 +21,7 @@ import { TableHighlightInstanceProps } from '../../plugins/useTableRowHighlight/
 import RenderVirtualizedTableRowWithRef from '../../renderComponents/RenderVirtualizedTableRow/RenderVirtualizedTableRowWithRef';
 import {
 	GetItemSize,
+	RenderItem,
 	RenderItemProps,
 	TableRefValue,
 	VirtualizedTableProps,
@@ -51,11 +52,11 @@ export type RenderVirtualizedTableBodyProps<
 	height: number;
 	outerRef?: Ref<HTMLDivElement>;
 	RenderItem: Required<VirtualizedTableProps<D, ExtraItemProps>>['RenderItem'];
-	ItemLoader: FC<RenderItemProps>;
+	ItemLoader: FC<RenderItemProps<D, ExtraItemProps>>;
 };
 
 export type DefaultExtraItemData<
-	D extends object = {},
+	D extends object,
 	E extends object = {}
 > = Pick<
 	RenderVirtualizedTableBodyProps<D, E>,
@@ -71,7 +72,7 @@ export type DefaultExtraItemData<
 	deleteRef: UseRowsRefsReturn['deleteRef'];
 	isItemLoaded: (index: number) => boolean;
 	RenderItem: RenderVirtualizedTableBodyProps<D, E>['RenderItem'];
-	ItemLoader: FC<RenderItemProps>;
+	ItemLoader: RenderItem<D, E>;
 } & E;
 
 const RenderVirtualizedTableBody =
@@ -115,11 +116,13 @@ const RenderVirtualizedTableBody =
 			(innerRef: DroppableProvided['innerRef']) => (node: HTMLDivElement) => {
 				innerRef(node);
 
-				if (typeof outerRef === 'function') {
-					return outerRef(node);
-				}
+				if (outerRef) {
+					if (typeof outerRef === 'function') {
+						return outerRef(node);
+					}
 
-				(outerRef as MutableRefObject<HTMLDivElement>).current = node;
+					(outerRef as MutableRefObject<HTMLDivElement>).current = node;
+				}
 
 				return node;
 			};
@@ -140,7 +143,7 @@ const RenderVirtualizedTableBody =
 				: getItemSize;
 		};
 
-		const itemData: DefaultExtraItemData<D> = {
+		const itemData = {
 			provided,
 			getRowId,
 			selectedCacheById,
@@ -157,7 +160,7 @@ const RenderVirtualizedTableBody =
 			ItemLoader,
 			rowProps,
 			...itemExtraData,
-		};
+		} as DefaultExtraItemData<D, ExtraItemProps>;
 
 		const itemKey = (index: number) => {
 			if (isItemLoaded(index)) {
@@ -181,7 +184,7 @@ const RenderVirtualizedTableBody =
 					isItemLoaded={isItemLoaded}
 				>
 					{({ onItemsRendered }) => (
-						<VariableSizeList
+						<VariableSizeList<typeof itemData>
 							ref={resultListRef}
 							itemKey={itemKey}
 							outerRef={outerRef}
