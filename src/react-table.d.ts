@@ -40,6 +40,11 @@ declare module 'react-table' {
 			ExtraProps
 	>;
 
+	export type CellRenderer<
+		D extends object,
+		V extends any
+	> = ColumnInterfaceBasedOnValue<D, V>['Cell'];
+
 	export interface Hooks<D extends object = {}, P extends object>
 		extends UseTableHooks<D> {
 		prepareRow: Array<PluginPrepareRow<P, D>>;

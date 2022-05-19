@@ -33,9 +33,9 @@ import { RowRef } from './plugins/useTableCore/useInstance/hooks/useRowsRefs/use
 
 export type GetItemSize<D extends object> =
 	| number
-	| ((row: Row, tableRef: ForwardedRef<TableRefValue<D>>) => number);
+	| ((row: Row<D>, tableRef: ForwardedRef<TableRefValue<D>>) => number);
 
-export type RowProps = object | ((row: Row) => object);
+export type RowProps<D extends object> = object | ((row: Row<D>) => object);
 
 export type RenderItemProps<
 	D extends object = {},
@@ -78,7 +78,7 @@ export type VirtualizedTableProps<
 	onLoadPage?: () => any;
 	loadPerPage?: number;
 	hasNextPage?: boolean;
-	rowProps?: RowProps;
+	rowProps?: RowProps<D>;
 	className?: string;
 	itemExtraData?: ExtraItemProps;
 };
