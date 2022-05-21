@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { useContext } from 'react';
 import {
 	TableIsSomeRowsSelectedContextContext,
