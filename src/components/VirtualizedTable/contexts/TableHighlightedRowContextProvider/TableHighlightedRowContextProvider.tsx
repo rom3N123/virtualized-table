@@ -6,14 +6,13 @@ import React, {
 	SetStateAction,
 	useState,
 } from 'react';
-import { node } from 'prop-types';
 import { Row } from 'react-table';
 
-export type HighlightedRow<T extends object> = Row<T> | null;
+export type HighlightedRow<D extends object> = Row<D> | null;
 
-export type TableHighlightedRowContextValue<T extends object> = {
-	highlightedRow: HighlightedRow<T>;
-	setHighlightedRow: Dispatch<SetStateAction<HighlightedRow<T> | null>>;
+export type TableHighlightedRowContextValue<D extends object> = {
+	highlightedRow: HighlightedRow<D>;
+	setHighlightedRow: Dispatch<SetStateAction<HighlightedRow<D> | null>>;
 };
 
 export const TableHighlightedRowContext =
@@ -23,14 +22,14 @@ export const TableHighlightedRowContext =
 		setHighlightedRow: () => {},
 	});
 
-const TableHighlightedRowContextProvider = <T extends object>({
+const TableHighlightedRowContextProvider = <D extends object>({
 	children,
 }: {
 	children: ReactNode;
 }): ReactElement => {
-	const [highlightedRow, setHighlightedRow] = useState<HighlightedRow<T>>(null);
+	const [highlightedRow, setHighlightedRow] = useState<HighlightedRow<D>>(null);
 
-	const contextValue: TableHighlightedRowContextValue<T> = {
+	const contextValue: TableHighlightedRowContextValue<D> = {
 		highlightedRow,
 		setHighlightedRow,
 	};
@@ -40,14 +39,6 @@ const TableHighlightedRowContextProvider = <T extends object>({
 			{children}
 		</TableHighlightedRowContext.Provider>
 	);
-};
-
-TableHighlightedRowContextProvider.propTypes = {
-	children: node,
-};
-
-TableHighlightedRowContextProvider.defaultProps = {
-	children: null,
 };
 
 export default TableHighlightedRowContextProvider;

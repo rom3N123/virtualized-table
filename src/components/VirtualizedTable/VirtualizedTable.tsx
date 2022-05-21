@@ -1,102 +1,21 @@
-import React, {
-	FC,
-	ReactElement,
-	memo,
-	useImperativeHandle,
-	Ref,
-	ForwardedRef,
-	MutableRefObject,
-	RefObject,
-} from 'react';
+import React, { ReactElement, memo, useImperativeHandle } from 'react';
 import { VIRTUALIZED_TABLE_PLUGINS } from './VirtualizedTable.constants';
 import {
-	Column,
 	FinalTableInstance,
-	GetRowId,
-	PluginHook,
-	Row,
 	useBlockLayout,
 	useExpanded,
 	useTable,
 } from 'react-table';
-import Header, { HeaderRowProps } from '../HeaderRow/HeaderRow';
+import Header from '../HeaderRow/HeaderRow';
 import VirtualizedTableBody from './components/VirtualizedTableBody';
-import { ListChildComponentProps, VariableSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import {
-	DefaultExtraItemData,
-	RenderVirtualizedTableBodyProps,
-} from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 import RenderVirtualizedTableRow from './renderComponents/RenderVirtualizedTableRow';
 import LoadingItem from '../LoadingItem';
-import { RowRef } from './plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import useNewSyncHorizontalScroll from '../../hooks/useNewSyncHorizontalScroll';
-
-export type GetItemSize<D extends object> =
-	| number
-	| ((row: Row<D>, tableRef: TableRefValue<D>) => number);
-
-export type RowProps<D extends object> = object | ((row: Row<D>) => object);
-
-export type RenderItemProps<
-	D extends object = {},
-	ExtraItemProps extends object = {}
-> = ListChildComponentProps<DefaultExtraItemData<D, ExtraItemProps>>;
-
-export type RenderItemPropsWithRef<
-	D extends object = {},
-	E extends object = {}
-> = RenderItemProps<D, E> & { ref: RowRef };
-
-export type RenderItem<
-	D extends object,
-	E extends object = {},
-	WithRefProp extends boolean = false
-> = FC<
-	RenderItemProps<D, E> & (WithRefProp extends true ? { ref: RowRef } : {})
->;
-
-export type VirtualizedTableProps<
-	D extends object = {},
-	ExtraItemProps extends object = {}
-> = {
-	data: D[];
-	columns: Column<D>[];
-	getRowId: GetRowId<D>;
-	getItemSize: GetItemSize<D>;
-	headerHeight: number;
-
-	tableRef: MutableRefObject<TableRefValue<D> | undefined>;
-	extraPlugins?: PluginHook<D, {}>[];
-	TableBody?: <D extends object, ExtraItemProps extends object = {}>(
-		props: RenderVirtualizedTableBodyProps<D, ExtraItemProps>
-	) => ReactElement;
-	HeaderRow?: FC<HeaderRowProps<D>>;
-	TableRow?: FC;
-	listRef?: Ref<VariableSizeList>;
-	RenderItem?: RenderItem<D, ExtraItemProps, true>;
-	ItemLoader?: FC<RenderItemProps<D, ExtraItemProps>>;
-	isLoadingNextPage?: boolean;
-	onLoadPage?: () => any;
-	loadPerPage?: number;
-	hasNextPage?: boolean;
-	rowProps?: RowProps<D>;
-	className?: string;
-	itemExtraData?: ExtraItemProps;
-};
-
-export type TableRefValue<D extends object> = {
-	instance: FinalTableInstance<D>;
-	changeTableSelectionMode: FinalTableInstance<D>['changeTableSelectionMode'];
-	enableTableSelectionMode: FinalTableInstance<D>['enableTableSelectionMode'];
-	disableTableSelectionMode: FinalTableInstance<D>['disableTableSelectionMode'];
-	selectedArray: FinalTableInstance<D>['selectedCacheArrayRef']['current'];
-	selectedObject: FinalTableInstance<D>['selectedCacheById'];
-	highlightedRow: FinalTableInstance<D>['highlightedRowRef']['current']['value'];
-	clearSelectedRows: FinalTableInstance<D>['clearSelectedRows'];
-	deleteRowsFromSelected: FinalTableInstance<D>['deleteRowsFromSelected'];
-	getSelectedRows: FinalTableInstance<D>['getSelectedRows'];
-};
+import {
+	VirtualizedTableProps,
+	TableImperativeHandle,
+} from './VirtualizedTable.types';
 
 function VirtualizedTable<
 	D extends object = {},
@@ -139,7 +58,7 @@ function VirtualizedTable<
 		...plugins
 	) as FinalTableInstance<D>;
 
-	const imperativeHandle: TableRefValue<D> = {
+	const imperativeHandle: TableImperativeHandle<D> = {
 		instance,
 		changeTableSelectionMode: instance.changeTableSelectionMode,
 		enableTableSelectionMode: instance.enableTableSelectionMode,
@@ -171,6 +90,7 @@ function VirtualizedTable<
 					)}
 
 					<TableBody<D, ExtraItemProps>
+						data={data}
 						imperativeHandle={imperativeHandle}
 						getItemSize={getItemSize}
 						getRowId={getRowId}

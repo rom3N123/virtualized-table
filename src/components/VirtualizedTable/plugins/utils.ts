@@ -1,24 +1,25 @@
+import { Row } from 'react-table';
 import { Dispatch, SetStateAction } from 'react';
 
-type CombineFunctions = <T>(
-	setSelectedRows?: Dispatch<SetStateAction<T[]>>,
+type CombineFunctions = (
+	setSelectedRows?: Dispatch<SetStateAction<string[]>>,
 	setIsSomeRowsSelected?: Dispatch<SetStateAction<boolean>>
-) => (rows: T[]) => void;
+) => (rowsIds: string[]) => any;
 
 export const combineFunctions: CombineFunctions =
-	(setSelectedRows, setIsSomeRowsSelected) => rows => {
-		setSelectedRows?.(rows);
-		setIsSomeRowsSelected?.(Boolean(rows.length));
+	(setSelectedRows, setIsSomeRowsSelected) => rowsIds => {
+		setSelectedRows?.(rowsIds);
+		setIsSomeRowsSelected?.(Boolean(rowsIds.length));
 	};
 
 export type ProxyTarget<T> = { value: T };
 
-export const getProxiedArray = <R extends object>(
-	target: ProxyTarget<R[]>,
-	setState: Dispatch<SetStateAction<R[]>>
+export const getProxiedArray = (
+	target: ProxyTarget<string[]>,
+	setState: (rowsIds: string[]) => any
 ) => {
 	return new Proxy(target, {
-		set(target: ProxyTarget<R[]>, property: 'value', value: R[]) {
+		set(target: ProxyTarget<string[]>, property: 'value', value: string[]) {
 			target[property] = value;
 
 			setState?.([...target.value]);

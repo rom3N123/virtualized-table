@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import { areEqual } from 'react-window';
-import { RenderItemProps, RenderItem } from '../../VirtualizedTable';
+import { RenderItemProps, RenderItem } from '../..';
 
 function RenderVirtualizedTableRowWithRef<
 	D extends object,

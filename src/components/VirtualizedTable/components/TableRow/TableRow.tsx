@@ -4,10 +4,10 @@ import { DroppableProvided } from 'react-beautiful-dnd';
 import { Row } from 'react-table';
 import clsx from 'clsx';
 
-type TableRowProps<D extends object, R extends object = {}> = {
+export type TableRowProps<D extends object, R extends object = {}> = {
 	innerRef: DroppableProvided['innerRef'];
 	isHighlighted?: boolean;
-	onClick: MouseEventHandler<HTMLTableRowElement>;
+	onClick?: MouseEventHandler<HTMLTableRowElement>;
 	row: Row<D>;
 	renderProps?: R;
 };

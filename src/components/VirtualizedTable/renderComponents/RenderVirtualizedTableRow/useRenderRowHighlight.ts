@@ -1,25 +1,35 @@
+import { UseHighlightedRowRefReturn } from './../../plugins/useTableRowHighlight/hooks/useHighlightedRowRef/useHighlightedRowRef';
+import { RowWithProps } from 'react-table';
 import { useState, useLayoutEffect } from 'react';
 
-const useRenderRowHighlight = ({ row, highlightedRowRef }) => {
-    const [isSelected, setIsSelected] = useState(false);
-    const [isHighlighted, setIsHighlighted] = useState(false);
+export type UseRenderRowHighlightProps<D extends object> = {
+	row: RowWithProps<D>;
+	highlightedRowRef: UseHighlightedRowRefReturn<D>['highlightedRowRef'];
+};
 
-    useLayoutEffect(() => {
-        const isRowSelected = row.getIsSelectedRow(row);
+const useRenderRowHighlight = <D extends object>({
+	row,
+	highlightedRowRef,
+}: UseRenderRowHighlightProps<D>) => {
+	const [isSelected, setIsSelected] = useState(false);
+	const [isHighlighted, setIsHighlighted] = useState(false);
 
-        if (highlightedRowRef.current.value?.id === row.id) {
-            setIsHighlighted(true);
-        } else if (isSelected !== isRowSelected) {
-            setIsSelected(isRowSelected);
-        }
-    }, [row]);
+	useLayoutEffect(() => {
+		const isRowSelected = row.getIsSelectedRow(row);
 
-    return {
-        isSelected,
-        setIsSelected,
-        isHighlighted,
-        setIsHighlighted,
-    };
+		if (highlightedRowRef.current?.value?.id === row.id) {
+			setIsHighlighted(true);
+		} else if (isSelected !== isRowSelected) {
+			setIsSelected(isRowSelected);
+		}
+	}, [row]);
+
+	return {
+		isSelected,
+		setIsSelected,
+		isHighlighted,
+		setIsHighlighted,
+	};
 };
 
 export default useRenderRowHighlight;

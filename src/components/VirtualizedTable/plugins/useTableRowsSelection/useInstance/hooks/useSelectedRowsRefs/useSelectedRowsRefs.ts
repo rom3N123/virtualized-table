@@ -7,19 +7,19 @@ import {
 	getProxiedArray,
 	ProxyTarget,
 } from './../../../../utils';
+import { useTableRowsSelectionContext } from '../../../../../contexts/TableRowsSelectionContextProvider';
 
-const useSelectedRowsRefs = () => {
-	/**
-	 * FIXME
-	 */
-	// const { setSelectedRows } = useTableRowsSelectionContext() || {};
+const useSelectedRowsRefs = <D extends object>() => {
+	const { setSelectedRows } = useTableRowsSelectionContext() || {};
 	const { setIsSomeRowsSelected } = useTableIsSomeRowsSelectedContext() || {};
 
-	const selectedCacheByIdRef = useRef<Record<string, Row>>({});
+	const selectedCacheByIdRef = useRef<Record<string, Row<D>>>({});
 
-	const selectedCacheArrayRef = useRef<ProxyTarget<Row[]>>(
-		{ value: [] }
-		// combineFunctions<object>(setSelectedRows, setIsSomeRowsSelected)
+	const selectedCacheArrayRef = useRef<ProxyTarget<string[]>>(
+		getProxiedArray(
+			{ value: [] },
+			combineFunctions(setSelectedRows, setIsSomeRowsSelected)
+		)
 	);
 
 	return {

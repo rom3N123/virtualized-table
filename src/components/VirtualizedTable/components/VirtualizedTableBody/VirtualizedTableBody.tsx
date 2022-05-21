@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import RenderVirtualizedTableBody, {
 	RenderVirtualizedTableBodyProps,
-} from '../RenderVirtualizedTableBody/RenderVirtualizedTableBody';
+} from '../RenderVirtualizedTableBody';
 
 function VirtualizedTableBody<
 	D extends object,

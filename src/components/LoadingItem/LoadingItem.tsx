@@ -1,5 +1,5 @@
 import ContentLoader from 'react-content-loader';
-import { RenderItemProps } from '../Tables/VirtualizedTable/VirtualizedTable';
+import { RenderItemProps } from '../VirtualizedTable/VirtualizedTable.types';
 
 export const ROW_INDENT_Y = 0;
 export const FIRST_ROW_INDENT_Y = 10;

@@ -1,14 +1,15 @@
 import React, { ForwardedRef, forwardRef, useImperativeHandle } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import useRenderRowHighlight from './useRenderRowHighlight';
-import TableRow from '../../components/TableRow';
-import { RenderItemProps } from '../../VirtualizedTable';
+import TableRow, { TableRowProps } from '../../components/TableRow/TableRow';
+import { RenderItemProps } from '../../VirtualizedTable.types';
 import { RowRefMethods } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
-import { RowCellRenderProps } from '../../components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
+import { RowCellRenderProps } from '../../components/RenderVirtualizedTableBody';
+import { RowWithProps } from 'react-table';
 
 function RenderTableRow<D extends object = {}, E extends object = {}>(
 	{ index, style, data }: RenderItemProps<D, E>,
-	ref: ForwardedRef<RowRefMethods>
+	ref: ForwardedRef<RowRefMethods<D>>
 ) {
 	const {
 		rows,
@@ -27,13 +28,12 @@ function RenderTableRow<D extends object = {}, E extends object = {}>(
 	}
 
 	const { original } = row;
-
 	prepareRow(row);
 
 	const { isSelected, setIsSelected, isHighlighted, setIsHighlighted } =
 		useRenderRowHighlight({
 			highlightedRowRef,
-			row,
+			row: row as RowWithProps<D>,
 		});
 
 	const isHighlightedOrSelected = isHighlighted || isSelected;
@@ -45,8 +45,8 @@ function RenderTableRow<D extends object = {}, E extends object = {}>(
 		setIsHighlighted,
 	}));
 
-	const onHighlightRowHandler = (event: MouseEvent) => {
-		row.onHighlightRow(index, event);
+	const onHighlightRowHandler: TableRowProps<D>['onClick'] = event => {
+		(row as RowWithProps<D>).onHighlightRow(index, event);
 	};
 
 	const draggableId = getRowId!(original, index);

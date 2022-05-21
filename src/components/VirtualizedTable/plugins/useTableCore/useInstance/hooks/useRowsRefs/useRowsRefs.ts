@@ -7,32 +7,33 @@ import {
 } from 'react';
 import { Row } from 'react-table';
 
-export type RowRefMethods = {
-	row: Row;
+export type RowRefMethods<D extends object> = {
+	row: Row<D>;
 	isSelected: boolean;
 	setIsSelected: Dispatch<SetStateAction<boolean>>;
 	setIsHighlighted: Dispatch<SetStateAction<boolean>>;
 };
 
-export type RowRef = MutableRefObject<RowRefMethods | null>;
+export type RowRef<D extends object> =
+	MutableRefObject<RowRefMethods<D> | null>;
 
-export type RowsRefs = Record<string, RowRef>;
+export type RowsRefs<D extends object> = Record<string, RowRef<D>>;
 
 type RowCallback<T extends any = void> = (rowId: string | number) => T;
 
-export type UseRowsRefsReturn = {
-	refs: MutableRefObject<RowsRefs>;
-	initializeRef: RowCallback<RowRef>;
+export type UseRowsRefsReturn<D extends object> = {
+	refs: MutableRefObject<RowsRefs<D>>;
+	initializeRef: RowCallback<RowRef<D>>;
 	deleteRef: RowCallback;
-	getRowRef: RowCallback<RowRef>;
+	getRowRef: RowCallback<RowRef<D>>;
 };
 
-const useRowsRefs = (): UseRowsRefsReturn => {
-	const refs = useRef<RowsRefs>({});
+function useRowsRefs<D extends object>() {
+	const refs = useRef<RowsRefs<D>>({});
 
-	const getRowRef = (rowId: string | number): RowRef => refs.current[rowId];
+	const getRowRef = (rowId: string | number): RowRef<D> => refs.current[rowId];
 
-	const initializeRef = (rowId: string | number): RowRef => {
+	const initializeRef = (rowId: string | number): RowRef<D> => {
 		const existingRef = getRowRef(rowId);
 
 		if (existingRef) {
@@ -53,7 +54,7 @@ const useRowsRefs = (): UseRowsRefsReturn => {
 		initializeRef,
 		deleteRef,
 		getRowRef,
-	};
-};
+	} as UseRowsRefsReturn<D>;
+}
 
 export default useRowsRefs;

@@ -14,23 +14,25 @@ export type OnHighlightRowOptions = {
 	shouldForceHighlight: boolean;
 };
 
-export type TableHighlightInstanceProps = {
-	highlightedRowRef: MutableRefObject<ProxyTarget<Row | null>>;
+export type TableHighlightInstanceProps<D extends object> = {
+	highlightedRowRef: RefObject<ProxyTarget<Row<D> | null>>;
 	previousHighlightedRowIdRef: MutableRefObject<string | null>;
 	onHighlightRow: (index: number, options?: OnHighlightRowOptions) => void;
 	highlightRowById: (rowId: number | string) => void;
 };
 
-const useInstance = (
-	instance: TableInstance & UseRowsRefsReturn & TableSelectionModeInstanceProps
-) => {
+type Instance<D extends object> = TableInstance<D> &
+	UseRowsRefsReturn<D> &
+	TableSelectionModeInstanceProps;
+
+function useInstance<D extends object>(instance: Instance<D>): void {
 	const { rows, plugins, rowsById, getRowRef, isSelectionModeObservable } =
 		instance;
 	const isSelectionMode = useObservable(isSelectionModeObservable);
 
-	const { highlightedRowRef } = useHighlightedRowRef();
+	const { highlightedRowRef } = useHighlightedRowRef<D>();
 
-	const previousHighlightedRowIdRef: TableHighlightInstanceProps['previousHighlightedRowIdRef'] =
+	const previousHighlightedRowIdRef: TableHighlightInstanceProps<D>['previousHighlightedRowIdRef'] =
 		useRef<string | null>(null);
 
 	ensurePluginOrder(
@@ -46,7 +48,7 @@ const useInstance = (
 		previousHighlightedRowIdRef.current !== null;
 
 	useEffect(() => {
-		if (highlightedRowRef.current.value) {
+		if (highlightedRowRef.current?.value) {
 			const rowRef = getRowRef(highlightedRowRef.current.value.id);
 
 			rowRef?.current?.setIsHighlighted(false);
@@ -72,7 +74,7 @@ const useInstance = (
 		return {};
 	};
 
-	const onHighlightRow: TableHighlightInstanceProps['onHighlightRow'] = (
+	const onHighlightRow: TableHighlightInstanceProps<D>['onHighlightRow'] = (
 		index,
 		options = { shouldForceHighlight: false }
 	) => {
@@ -83,7 +85,7 @@ const useInstance = (
 			getPreviousHighlightedRowInfo();
 
 		if (row.id !== previousHighlightedRow?.id || options.shouldForceHighlight) {
-			highlightedRowRef.current.value = row;
+			highlightedRowRef.current!.value = row;
 
 			if (getIsPreviousHighlightedRowExists()) {
 				previousHighlightedRowRef?.current?.setIsHighlighted(false);
@@ -93,7 +95,7 @@ const useInstance = (
 
 			previousHighlightedRowIdRef.current = row.id;
 		} else {
-			highlightedRowRef.current.value = null;
+			highlightedRowRef.current!.value = null;
 			previousHighlightedRowRef?.current?.setIsHighlighted(false);
 			previousHighlightedRowIdRef.current = null;
 		}
@@ -104,7 +106,7 @@ const useInstance = (
 	 * @param {object} options
 	 * @param {boolean} options.shouldForceHighlight Если строка уже выделена у неё не будет снято выделение
 	 */
-	const highlightRowById: TableHighlightInstanceProps['highlightRowById'] = (
+	const highlightRowById: TableHighlightInstanceProps<D>['highlightRowById'] = (
 		rowId,
 		options = { shouldForceHighlight: true }
 	) => {
@@ -115,7 +117,7 @@ const useInstance = (
 		}
 	};
 
-	const instanceProps: TableHighlightInstanceProps = {
+	const instanceProps: TableHighlightInstanceProps<D> = {
 		highlightedRowRef,
 		previousHighlightedRowIdRef,
 		onHighlightRow,
@@ -123,6 +125,6 @@ const useInstance = (
 	};
 
 	Object.assign(instance, instanceProps);
-};
+}
 
 export default useInstance;

@@ -1,13 +1,19 @@
 import { useTableHighlightedRowContext } from '../../../../contexts/TableHighlightedRowContextProvider';
-import { useRef } from 'react';
-import { getProxiedObject } from '../../../utils';
+import { useRef, RefObject } from 'react';
+import { getProxiedObject, ProxyTarget } from '../../../utils';
 import { HighlightedRow } from '../../../../contexts/TableHighlightedRowContextProvider/TableHighlightedRowContextProvider';
 
-const useHighlightedRowRef = () => {
-	const { setHighlightedRow } = useTableHighlightedRowContext<{}>() || {};
+export type UseHighlightedRowRefReturn<D extends object> = {
+	highlightedRowRef: RefObject<ProxyTarget<HighlightedRow<D>>>;
+};
+
+const useHighlightedRowRef = <
+	D extends object
+>(): UseHighlightedRowRefReturn<D> => {
+	const { setHighlightedRow } = useTableHighlightedRowContext<D>() || {};
 
 	const highlightedRowRef = useRef(
-		getProxiedObject<HighlightedRow<{}>>({ value: null }, setHighlightedRow)
+		getProxiedObject<HighlightedRow<D>>({ value: null }, setHighlightedRow)
 	);
 
 	return {

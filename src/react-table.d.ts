@@ -1,3 +1,5 @@
+import { TableRowsSelectionRowProps } from './components/VirtualizedTable/plugins/useTableRowsSelection/prepareRow';
+import { TableHighlightRowProps } from './components/VirtualizedTable/plugins/useTableRowHighlight/prepareRow';
 import { TableRowsSelectionInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableRowsSelection/useInstance/useInstance';
 import { TableCoreInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableCore/useInstance/useInstance';
 import { TableLinkHighlightRowWithSelectionInstanceProps } from './components/Tables/VirtualizedTable/plugins/useLinkHighlightRowWithSelection/useInstance';
@@ -15,7 +17,7 @@ declare module 'react-table' {
 
 	export type GetRowId<D extends object> = UseTableOptions<D>['getRowId'];
 	export type GetTableBodyProps = UseTableInstanceProps['getTableBodyProps'];
-	export type UseTableRows = UseTableInstanceProps['rows'];
+	export type UseTableRows<D extends object> = UseTableInstanceProps<D>['rows'];
 	export type PrepareRow = UseTableInstanceProps['prepareRow'];
 
 	export type PluginPrepareRow<P extends object = {}, D extends object = {}> = (
@@ -57,6 +59,11 @@ declare module 'react-table' {
 	> = {
 		Cell?: Renderer<FinalCellProps<D, V>> | undefined;
 	};
+
+	export type RowWithProps<D extends object, P extends object = {}> = Row<D> &
+		TableHighlightRowProps &
+		TableRowsSelectionRowProps &
+		P;
 
 	export type CellRenderer<
 		D extends object,
