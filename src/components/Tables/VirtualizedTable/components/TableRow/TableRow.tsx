@@ -1,25 +1,25 @@
-import React, { FC, MouseEventHandler, ReactElement } from 'react';
+import React, { MouseEventHandler, ReactElement } from 'react';
 import './TableRow.scss';
 import { DroppableProvided } from 'react-beautiful-dnd';
 import { Row } from 'react-table';
 import clsx from 'clsx';
 
-type TableRowProps = {
+type TableRowProps<D extends object, R extends object = {}> = {
 	innerRef: DroppableProvided['innerRef'];
 	isHighlighted?: boolean;
 	onClick: MouseEventHandler<HTMLTableRowElement>;
-	row: Row;
-	renderProps?: object;
+	row: Row<D>;
+	renderProps?: R;
 };
 
-const TableRow: FC<TableRowProps> = ({
+function TableRow<D extends object, R extends object = {}>({
 	innerRef,
 	isHighlighted,
 	onClick,
 	row,
 	renderProps,
 	...otherRowProps
-}): ReactElement => {
+}: TableRowProps<D, R>): ReactElement {
 	const { cells } = row;
 
 	return (
@@ -31,15 +31,18 @@ const TableRow: FC<TableRowProps> = ({
 		>
 			{cells.map(cell => {
 				const { getCellProps, render, column } = cell;
-				// const { width, cellProps } = column;
-				const { width } = column;
+				const { width, minWidth, grow } = column;
 
 				return (
 					<td
 						className='rowData'
 						width={width}
-						// {...cellProps}
-						{...getCellProps()}
+						{...getCellProps({
+							style: {
+								minWidth,
+								flexGrow: grow,
+							},
+						})}
 						key={column.id}
 					>
 						{render('Cell', renderProps)}
@@ -48,6 +51,6 @@ const TableRow: FC<TableRowProps> = ({
 			})}
 		</tr>
 	);
-};
+}
 
 export default TableRow;

@@ -4,6 +4,7 @@ import React, {
 	MutableRefObject,
 	ReactElement,
 	Ref,
+	RefObject,
 	useRef,
 } from 'react';
 import { DraggableProvided, DroppableProvided } from 'react-beautiful-dnd';
@@ -47,12 +48,12 @@ export type RenderVirtualizedTableBodyProps<
 	rows: UseTableRows;
 	prepareRow: PrepareRow;
 	instance: FinalTableInstance<D>;
-	tableRef: ForwardedRef<TableRefValue<D>>;
 	width: number;
 	height: number;
 	outerRef?: Ref<HTMLDivElement>;
 	RenderItem: Required<VirtualizedTableProps<D, ExtraItemProps>>['RenderItem'];
 	ItemLoader: FC<RenderItemProps<D, ExtraItemProps>>;
+	imperativeHandle: TableRefValue<D>;
 };
 
 export type RowCellRenderProps = {
@@ -100,15 +101,16 @@ const RenderVirtualizedTableBody =
 		RenderItem,
 		ItemLoader,
 		onLoadPage,
-		tableRef,
 		width,
 		height,
+		imperativeHandle,
 		loadPerPage = 10,
 	}: RenderVirtualizedTableBodyProps<D, ExtraItemProps>) =>
 	(provided: DroppableProvided): ReactElement => {
 		const { innerRef, droppableProps } = provided;
 
-		const resultListRef = listRef || useRef<VariableSizeList>(null);
+		const resultListRef = (listRef ||
+			useRef<VariableSizeList>(null)) as RefObject<VariableSizeList>;
 
 		const {
 			selectedCacheById,
@@ -146,7 +148,7 @@ const RenderVirtualizedTableBody =
 
 		const itemSize = (index: number): number => {
 			return typeof getItemSize === 'function'
-				? getItemSize(rows[index], tableRef)
+				? getItemSize(rows[index], imperativeHandle)
 				: getItemSize;
 		};
 

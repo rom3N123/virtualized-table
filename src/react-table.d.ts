@@ -58,11 +58,17 @@ declare module 'react-table' {
 		Cell?: Renderer<FinalCellProps<D, V>> | undefined;
 	};
 
-	export type TableCellRenderer<
+	export type CellRenderer<
 		D extends object,
 		V extends any,
 		E extends object = RowCellRenderProps
 	> = Renderer<FinalCellProps<D, V, E>> | undefined;
+
+	export type HeaderRenderer<
+		D extends object,
+		V extends any,
+		E extends object = RowCellRenderProps
+	> = Renderer<HeaderProps<D> & FinalCellProps<D, V, E>> | undefined;
 
 	export interface Hooks<D extends object = {}, P extends object>
 		extends UseTableHooks<D> {
@@ -77,11 +83,17 @@ declare module 'react-table' {
 		(hooks: Hooks<D, P>): void;
 	}
 
-	export interface UseTableColumnOptions<D extends object> {
-		Cell?: TableCellRenderer<D>;
+	export type CustomColumnProps = {
+		grow?: number;
+	};
+
+	export interface UseTableColumnOptions<D extends object>
+		extends CustomColumnProps {
+		Cell?: CellRenderer<D>;
+		Header?: HeaderRenderer<D>;
 	}
 	export interface UseTableColumnProps<D extends object>
 		extends UseResizeColumnsColumnProps<D>,
 			UseSortByColumnProps<D>,
-			{ cellProps: object } {}
+			CustomColumnProps {}
 }

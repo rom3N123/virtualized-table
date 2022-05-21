@@ -1,9 +1,10 @@
-import React, { FC, ReactElement } from 'react';
-import { Column, TableCellRenderer } from 'react-table';
+import React, { FC, ReactElement, useRef } from 'react';
+import { VariableSizeList } from 'react-window';
 import VirtualizedTable from '../components/Tables/VirtualizedTable';
-import VirtualizedTableCheckboxCell from '../components/Tables/VirtualizedTable/cells/column/VirtualizedTableCheckboxCell';
+import { TableRefValue } from '../components/Tables/VirtualizedTable/VirtualizedTable';
+import columns from './columns';
 
-type Data = {
+export type Data = {
 	id: number;
 	name: string;
 	age?: number;
@@ -14,28 +15,23 @@ const getMockRows = (length: number) =>
 
 const data: Data[] = getMockRows(10);
 
-const NameCell: TableCellRenderer<Data, string> = ({ value }) => {
-	return <div style={{ color: 'blue' }}>{value}</div>;
-};
-
-const columns: Column<Data>[] = [
-	{ id: 'dnd', Cell: VirtualizedTableCheckboxCell, accessor: 'age' },
-	{
-		id: '1',
-		accessor: 'name',
-		Cell: NameCell,
-	},
-];
-
 const TestPage: FC = (): ReactElement => {
+	const listRef = useRef<VariableSizeList<Data>>(null);
+	const tableRef = useRef<TableRefValue<Data>>();
+
 	return (
 		<VirtualizedTable<Data>
+			tableRef={tableRef}
+			listRef={listRef}
 			headerHeight={50}
 			getRowId={row => row.id.toString()}
-			getItemSize={50}
+			getItemSize={(row, ref) => {
+				console.log(row);
+				console.log(ref);
+				return 100;
+			}}
 			data={data}
 			columns={columns}
-			ItemLoader={() => <div>...Loader</div>}
 		/>
 	);
 };

@@ -1,4 +1,4 @@
-import React, { FC, Ref } from 'react';
+import React, { Ref } from 'react';
 import { UseTableHeaderGroupProps } from 'react-table';
 
 export type HeaderRowProps<D extends object = {}> = {
@@ -8,12 +8,12 @@ export type HeaderRowProps<D extends object = {}> = {
 	fullWidthHeader?: boolean;
 };
 
-const HeaderRow: FC<HeaderRowProps> = ({
+function HeaderRow<D extends object>({
 	headerGroups,
 	headerRef,
 	height,
 	fullWidthHeader = true,
-}) => {
+}: HeaderRowProps<D>) {
 	return (
 		<div ref={headerRef} style={{ overflow: 'hidden', height }}>
 			{headerGroups.map(headerGroup => (
@@ -21,13 +21,24 @@ const HeaderRow: FC<HeaderRowProps> = ({
 					{...headerGroup.getHeaderGroupProps({
 						style: {
 							[fullWidthHeader ? 'width' : '']: '100%',
+							height: '100%',
 						},
 					})}
 					className='table-header'
 				>
 					{headerGroup.headers.map(column => {
+						const { minWidth, grow } = column;
+
 						return (
-							<div {...column.getHeaderProps(column.getSortByToggleProps())}>
+							<div
+								{...column.getHeaderProps({
+									style: {
+										minWidth,
+										flexGrow: grow,
+									},
+									...column.getSortByToggleProps?.(),
+								})}
+							>
 								{column.render('Header')}
 
 								{column.canResize && column.getResizerProps && (
@@ -45,6 +56,6 @@ const HeaderRow: FC<HeaderRowProps> = ({
 			))}
 		</div>
 	);
-};
+}
 
 export default HeaderRow;
