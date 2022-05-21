@@ -16,6 +16,7 @@ import {
 	VirtualizedTableProps,
 	TableImperativeHandle,
 } from './VirtualizedTable.types';
+import { useSticky } from 'react-table-sticky';
 
 function VirtualizedTable<
 	D extends object = {},
@@ -45,16 +46,17 @@ function VirtualizedTable<
 
 	const { getContainerRef, getHeaderRef } = useNewSyncHorizontalScroll();
 
-	const instance = useTable(
+	const instance = useTable<D>(
 		{
 			data,
 			columns,
 			getRowId,
+			autoResetExpanded: false,
 			...useTableProps,
 		},
 		useBlockLayout,
 		useExpanded,
-		// useSticky,
+		useSticky,
 		...plugins
 	) as FinalTableInstance<D>;
 

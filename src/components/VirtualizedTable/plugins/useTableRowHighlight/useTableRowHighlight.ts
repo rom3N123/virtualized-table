@@ -1,4 +1,4 @@
-import { PluginHook } from 'react-table';
+import { Hooks } from 'react-table';
 import prepareRow from './prepareRow';
 import useInstance from './useInstance';
 
@@ -7,7 +7,8 @@ export const USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME = 'useTableRowHighlight';
 /**
  * Хук для выделения строки в таблице
  */
-const useTableRowHighlight: PluginHook<{}, {}> = hooks => {
+const useTableRowHighlight = <D extends object>(hooks: Hooks<D, any>) => {
+	// @ts-ignore
 	hooks.useInstance.push(useInstance);
 	hooks.prepareRow.push(prepareRow);
 };

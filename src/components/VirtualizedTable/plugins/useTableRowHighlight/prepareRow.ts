@@ -1,18 +1,17 @@
+import { FinalTableInstance } from 'react-table';
+import { RowWithProps } from 'react-table';
 import { TableHighlightInstanceProps } from './useInstance';
-import { PluginPrepareRow, TableInstance } from 'react-table';
 
-export type TableHighlightRowProps = Pick<
-	TableHighlightInstanceProps,
+export type TableHighlightRowProps<D extends object> = Pick<
+	TableHighlightInstanceProps<D>,
 	'onHighlightRow'
 >;
 
-const prepareRow: PluginPrepareRow<TableHighlightRowProps> = (
-	row,
-	{ instance }
+const prepareRow = <D extends object>(
+	row: RowWithProps<D>,
+	{ instance }: { instance: FinalTableInstance<D> }
 ) => {
-	const _instance = instance as TableInstance & TableHighlightRowProps;
-
-	row.onHighlightRow = _instance.onHighlightRow;
+	row.onHighlightRow = instance.onHighlightRow;
 };
 
 export default prepareRow;

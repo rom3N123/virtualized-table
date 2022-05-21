@@ -86,8 +86,12 @@ declare module 'react-table' {
 		extends TableCommonProps,
 			TableSelectionModeRowProps {}
 
-	export interface PluginHook<D extends object = {}, P extends object> {
+	export interface PluginHook<D extends object = {}, P extends object = {}> {
 		(hooks: Hooks<D, P>): void;
+	}
+
+	export interface UseTableHooks<D extends object> extends Record<string, any> {
+		useInstance: Array<(instance: FinalTableInstance<D>) => void>;
 	}
 
 	export type CustomColumnProps = {

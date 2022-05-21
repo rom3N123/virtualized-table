@@ -1,7 +1,7 @@
-import React, { FC, ReactElement, useRef } from 'react';
+import React, { FC, ReactElement, RefObject, useRef } from 'react';
 import { VariableSizeList } from 'react-window';
 import VirtualizedTable from '../components/VirtualizedTable';
-import { TableRefValue } from '../components/VirtualizedTable/VirtualizedTable';
+import { TableImperativeHandle } from '../components/VirtualizedTable';
 import columns from './columns';
 
 export type Data = {
@@ -17,7 +17,7 @@ const data: Data[] = getMockRows(10);
 
 const TestPage: FC = (): ReactElement => {
 	const listRef = useRef<VariableSizeList<Data>>(null);
-	const tableRef = useRef<TableRefValue<Data>>();
+	const tableRef = useRef() as RefObject<TableImperativeHandle<Data>>;
 
 	return (
 		<VirtualizedTable<Data>

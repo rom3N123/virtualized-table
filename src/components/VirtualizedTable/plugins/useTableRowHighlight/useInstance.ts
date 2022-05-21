@@ -1,7 +1,7 @@
 import { ProxyTarget } from './../utils';
 import { USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME } from './useTableRowHighlight';
 import { USE_TABLE_SELECTION_MODE_PLUGIN_NAME } from './../useTableSelectionMode/useTableSelectionMode';
-import { useEffect, useRef, MutableRefObject } from 'react';
+import { useEffect, useRef, MutableRefObject, RefObject } from 'react';
 import { ensurePluginOrder, Row } from 'react-table';
 import useObservable from '../../../../hooks/useObservable';
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection/useTableRowsSelection';
@@ -15,7 +15,7 @@ export type OnHighlightRowOptions = {
 };
 
 export type TableHighlightInstanceProps<D extends object> = {
-	highlightedRowRef: RefObject<ProxyTarget<Row<D> | null>>;
+	highlightedRowRef: MutableRefObject<ProxyTarget<Row<D> | null>>;
 	previousHighlightedRowIdRef: MutableRefObject<string | null>;
 	onHighlightRow: (index: number, options?: OnHighlightRowOptions) => void;
 	highlightRowById: (rowId: number | string) => void;

@@ -11,10 +11,10 @@ import { MouseEvent } from 'react';
 
 type AnyCb = (...args: any[]) => any;
 
-type Instance = TableInstance &
+type Instance<D extends object> = TableInstance<D> &
 	TableSelectionModeInstanceProps &
-	TableHighlightInstanceProps &
-	TableRowsSelectionInstanceProps & {
+	TableHighlightInstanceProps<D> &
+	TableRowsSelectionInstanceProps<D> & {
 		shouldForceHighlight?: boolean;
 	};
 
@@ -26,7 +26,7 @@ export type TableLinkHighlightRowWithSelectionInstanceProps = {
 	toggleRowSelected: OnRowClick;
 };
 
-const useInstance = (instance: Instance) => {
+const useInstance = <D extends object>(instance: Instance<D>) => {
 	const {
 		rows,
 		plugins,
@@ -63,13 +63,13 @@ const useInstance = (instance: Instance) => {
 
 		let startIndex = 0;
 
-		if (selectedCacheArrayRef.current.value.length) {
-			const lastSelectedRow =
+		if (selectedCacheArrayRef.current?.value.length) {
+			const lastSelectedRowId =
 				selectedCacheArrayRef.current.value[
 					selectedCacheArrayRef.current.value.length - 1
 				];
 
-			startIndex = lastSelectedRow.index;
+			startIndex = rowsById[lastSelectedRowId].index;
 		} else if (typeof previousHighlightedRow !== 'undefined') {
 			startIndex = previousHighlightedRow.index;
 		}
