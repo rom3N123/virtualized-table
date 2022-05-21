@@ -1,5 +1,5 @@
 import { TableHighlightInstanceProps } from './../../plugins/useTableRowHighlight/useInstance';
-import { DraggableProvided, DroppableProvided } from 'react-beautiful-dnd';
+import { DroppableProvided } from 'react-beautiful-dnd';
 import {
 	GetTableBodyProps,
 	FinalTableInstance,
@@ -44,13 +44,6 @@ export type RenderVirtualizedTableBodyProps<
 	RenderItem: Required<VirtualizedTableProps<D, ExtraItemProps>>['RenderItem'];
 	ItemLoader: FC<RenderItemProps<D, ExtraItemProps>>;
 	imperativeHandle: TableImperativeHandle<D>;
-};
-
-export type RowCellRenderProps = {
-	isSelected: boolean;
-	isHighlighted: boolean;
-	draggableProps: DraggableProvided['draggableProps'];
-	dragHandleProps: DraggableProvided['dragHandleProps'];
 };
 
 export type DefaultExtraItemData<

@@ -1,14 +1,12 @@
 import { TableRowsSelectionRowProps } from './components/VirtualizedTable/plugins/useTableRowsSelection/prepareRow';
 import { TableHighlightRowProps } from './components/VirtualizedTable/plugins/useTableRowHighlight/prepareRow';
-import { TableRowsSelectionInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableRowsSelection/useInstance/useInstance';
-import { TableCoreInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableCore/useInstance/useInstance';
-import { TableLinkHighlightRowWithSelectionInstanceProps } from './components/Tables/VirtualizedTable/plugins/useLinkHighlightRowWithSelection/useInstance';
-import { TableSelectionModeRowProps } from './components/Tables/VirtualizedTable/plugins/useTableSelectionMode/defaultGetTableSelectionModeProps';
-import { UseTableSelectionModeRowProps } from './components/Tables/VirtualizedTable/plugins/useTableSelectionMode/prepareRow';
-import 'react-table';
-import { TableHighlightInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableRowHighlight/useInstance';
-import { TableSelectionModeInstanceProps } from './components/Tables/VirtualizedTable/plugins/useTableSelectionMode/useInstance';
-import { RowCellRenderProps } from './components/Tables/VirtualizedTable/components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
+import { DraggableProvided } from 'react-beautiful-dnd';
+import { TableLinkHighlightRowWithSelectionInstanceProps } from './components/VirtualizedTable/plugins/useLinkHighlightRowWithSelection/useInstance';
+import { TableSelectionModeInstanceProps } from './components/VirtualizedTable/plugins/useTableSelectionMode/useInstance';
+import { TableRowsSelectionInstanceProps } from './components/VirtualizedTable/plugins/useTableRowsSelection/useInstance/useInstance';
+import { TableHighlightInstanceProps } from './components/VirtualizedTable/plugins/useTableRowHighlight/useInstance';
+import { TableCoreInstanceProps } from './components/VirtualizedTable/plugins/useTableCore/useInstance/useInstance';
+import { TableSelectionModeRowProps } from './components/VirtualizedTable/plugins/useTableSelectionMode/defaultGetTableSelectionModeProps';
 
 declare module 'react-table' {
 	export interface TableOptions<D extends object>
@@ -20,11 +18,6 @@ declare module 'react-table' {
 	export type UseTableRows<D extends object> = UseTableInstanceProps<D>['rows'];
 	export type PrepareRow = UseTableInstanceProps['prepareRow'];
 
-	export type PluginPrepareRow<P extends object = {}, D extends object = {}> = (
-		row: Row<D> & P,
-		meta: Meta<D>
-	) => void;
-
 	export type TableInstanceWithProps<
 		D extends object,
 		P extends object
@@ -35,13 +28,20 @@ declare module 'react-table' {
 		E extends object = {}
 	> = TableInstanceWithProps<
 		D,
-		TableCoreInstanceProps &
-			TableHighlightInstanceProps &
-			TableRowsSelectionInstanceProps &
+		TableCoreInstanceProps<D> &
+			TableHighlightInstanceProps<D> &
+			TableRowsSelectionInstanceProps<D> &
 			TableSelectionModeInstanceProps &
 			TableLinkHighlightRowWithSelectionInstanceProps &
 			E
 	>;
+
+	export type RowCellRenderProps = {
+		isSelected: boolean;
+		isHighlighted: boolean;
+		draggableProps: DraggableProvided['draggableProps'];
+		dragHandleProps: DraggableProvided['dragHandleProps'];
+	};
 
 	export type FinalCellProps<
 		D extends object,
@@ -61,8 +61,8 @@ declare module 'react-table' {
 	};
 
 	export type RowWithProps<D extends object, P extends object = {}> = Row<D> &
-		TableHighlightRowProps &
-		TableRowsSelectionRowProps &
+		TableHighlightRowProps<D> &
+		TableRowsSelectionRowProps<D> &
 		P;
 
 	export type CellRenderer<
@@ -77,18 +77,9 @@ declare module 'react-table' {
 		E extends object = RowCellRenderProps
 	> = Renderer<HeaderProps<D> & FinalCellProps<D, V, E>> | undefined;
 
-	export interface Hooks<D extends object = {}, P extends object>
-		extends UseTableHooks<D> {
-		prepareRow: Array<PluginPrepareRow<P, D>>;
-	}
-
 	export interface TableRowProps
 		extends TableCommonProps,
 			TableSelectionModeRowProps {}
-
-	export interface PluginHook<D extends object = {}, P extends object = {}> {
-		(hooks: Hooks<D, P>): void;
-	}
 
 	export interface UseTableHooks<D extends object> extends Record<string, any> {
 		useInstance: Array<(instance: FinalTableInstance<D>) => void>;
@@ -103,6 +94,7 @@ declare module 'react-table' {
 		Cell?: CellRenderer<D>;
 		Header?: HeaderRenderer<D>;
 	}
+
 	export interface UseTableColumnProps<D extends object>
 		extends UseResizeColumnsColumnProps<D>,
 			UseSortByColumnProps<D>,
