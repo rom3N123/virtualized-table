@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useRef } from 'react';
 import { VariableSizeList } from 'react-window';
-import VirtualizedTable from '../components/Tables/VirtualizedTable';
-import { TableRefValue } from '../components/Tables/VirtualizedTable/VirtualizedTable';
+import VirtualizedTable from '../components/VirtualizedTable';
+import { TableRefValue } from '../components/VirtualizedTable/VirtualizedTable';
 import columns from './columns';
 
 export type Data = {

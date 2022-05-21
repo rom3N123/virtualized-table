@@ -1,12 +1,10 @@
-import { TableRowsSelectionInstanceProps } from './useInstance';
-import { TableLinkHighlightRowWithSelectionInstanceProps } from './../../useLinkHighlightRowWithSelection/useInstance';
 import { ProxyTarget } from './../../utils';
 import { UseRowsRefsReturn } from './../../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import { TableSelectionModeInstanceProps } from './../../useTableSelectionMode/useInstance';
 import { USE_TABLE_CORE_PLUGIN_NAME } from './../../useTableCore/useTableCore';
 import { useEffect, useState, MutableRefObject } from 'react';
-import useObservable from '../../../../../../hooks/useObservable';
-import Observable from '../../../../../../helpers/Observable';
+import useObservable from '../../../../../hooks/useObservable';
+import Observable from '../../../../../helpers/Observable';
 import { ensurePluginOrder, TableInstance, Row } from 'react-table';
 import useSelectedRowsRefs from './hooks/useSelectedRowsRefs/useSelectedRowsRefs';
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection';

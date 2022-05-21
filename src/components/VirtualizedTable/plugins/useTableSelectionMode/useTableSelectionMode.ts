@@ -1,5 +1,4 @@
-import { PluginHook, PluginPrepareRow } from 'react-table';
-/* eslint-disable max-len */
+import { PluginHook } from 'react-table';
 import defaultGetTableSelectionModeProps from './defaultGetTableSelectionModeProps';
 import prepareRow from './prepareRow';
 import useInstance from './useInstance';

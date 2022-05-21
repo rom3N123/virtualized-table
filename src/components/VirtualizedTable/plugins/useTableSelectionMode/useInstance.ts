@@ -1,7 +1,7 @@
 /* eslint-disable import/named, max-len */
 import { useState } from 'react';
 import { TableInstance } from 'react-table';
-import Observable from '../../../../../helpers/Observable';
+import Observable from '../../../../helpers/Observable';
 import { useTableIsSelectionModeContext } from '../../contexts/TableIsSelectionModeContextProvider';
 
 type SelectionModeObservable = Observable<boolean>;

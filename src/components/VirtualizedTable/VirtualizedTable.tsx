@@ -19,7 +19,7 @@ import {
 	useExpanded,
 	useTable,
 } from 'react-table';
-import Header, { HeaderRowProps } from '../../HeaderRow/HeaderRow';
+import Header, { HeaderRowProps } from '../HeaderRow/HeaderRow';
 import VirtualizedTableBody from './components/VirtualizedTableBody';
 import { ListChildComponentProps, VariableSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -28,9 +28,9 @@ import {
 	RenderVirtualizedTableBodyProps,
 } from './components/RenderVirtualizedTableBody/RenderVirtualizedTableBody';
 import RenderVirtualizedTableRow from './renderComponents/RenderVirtualizedTableRow';
-import LoadingItem from '../../LoadingItem';
+import LoadingItem from '../LoadingItem';
 import { RowRef } from './plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
-import useNewSyncHorizontalScroll from '../../../hooks/useNewSyncHorizontalScroll';
+import useNewSyncHorizontalScroll from '../../hooks/useNewSyncHorizontalScroll';
 
 export type GetItemSize<D extends object> =
 	| number

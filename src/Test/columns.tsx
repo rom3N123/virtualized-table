@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { CellRenderer, Column, HeaderRenderer } from 'react-table';
-import VirtualizedTableCheckboxCell from '../components/Tables/VirtualizedTable/cells/column/VirtualizedTableCheckboxCell';
 import { Data } from './TestPage';
 
 const NameCell: CellRenderer<Data, string> = ({ value }) => {
@@ -18,7 +17,7 @@ const columns: Column<Data>[] = [
 	{
 		id: 'dnd',
 		Header,
-		Cell: VirtualizedTableCheckboxCell,
+		Cell: 'Hello',
 		accessor: 'age',
 		grow: 1,
 		minWidth: 1000,

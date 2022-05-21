@@ -1,12 +1,12 @@
-import { RowPropGetter, TableInstance } from 'react-table';
-import useObservable from '../../../../../hooks/useObservable';
-import { UseTableSelectionModeInstanceProps } from './useInstance';
+import { TableSelectionModeInstanceProps } from './useInstance';
+import { TableInstance, PropGetter } from 'react-table';
+import useObservable from '../../../../hooks/useObservable';
 
-export type TableSelectionModeRowProps = UseTableSelectionModeInstanceProps & {
+export type TableSelectionModeRowProps = TableSelectionModeInstanceProps & {
 	isSelectionMode: boolean;
 };
 
-const defaultGetTableSelectionModeProps: RowPropGetter<{}> = (
+const defaultGetTableSelectionModeProps: PropGetter<object, object> = (
 	props,
 	{ instance }
 ) => {

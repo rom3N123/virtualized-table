@@ -3,7 +3,7 @@ import { USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME } from './useTableRowHighlight';
 import { USE_TABLE_SELECTION_MODE_PLUGIN_NAME } from './../useTableSelectionMode/useTableSelectionMode';
 import { useEffect, useRef, MutableRefObject } from 'react';
 import { ensurePluginOrder, Row } from 'react-table';
-import useObservable from '../../../../../hooks/useObservable';
+import useObservable from '../../../../hooks/useObservable';
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection/useTableRowsSelection';
 import { TableInstance } from 'react-table';
 import { UseRowsRefsReturn } from '../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
