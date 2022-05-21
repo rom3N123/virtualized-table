@@ -87,7 +87,6 @@ function VirtualizedTable<
 							headerRef={getHeaderRef}
 							headerGroups={headerGroups}
 							height={headerHeight}
-							fullWidthHeader
 						/>
 					)}
 

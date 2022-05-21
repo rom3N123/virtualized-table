@@ -26,8 +26,6 @@ const TestPage: FC = (): ReactElement => {
 			headerHeight={50}
 			getRowId={row => row.id.toString()}
 			getItemSize={(row, ref) => {
-				console.log(row);
-				console.log(ref);
 				return 100;
 			}}
 			data={data}

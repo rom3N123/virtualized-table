@@ -1,9 +1,4 @@
-import React, {
-	MutableRefObject,
-	ReactElement,
-	RefObject,
-	useRef,
-} from 'react';
+import React, { MutableRefObject, ReactElement, memo, useRef } from 'react';
 import { DroppableProvided } from 'react-beautiful-dnd';
 import { VariableSizeList } from 'react-window';
 import InfiniteLoader from 'react-window-infinite-loader';
@@ -40,8 +35,7 @@ const RenderVirtualizedTableBody =
 	(provided: DroppableProvided): ReactElement => {
 		const { innerRef, droppableProps } = provided;
 
-		const resultListRef = (listRef ||
-			useRef<VariableSizeList>(null)) as RefObject<VariableSizeList>;
+		const resultListRef = listRef || useRef<VariableSizeList>(null);
 
 		const {
 			selectedCacheById,
@@ -127,7 +121,6 @@ const RenderVirtualizedTableBody =
 						<VariableSizeList<typeof itemData>
 							ref={resultListRef}
 							itemKey={itemKey}
-							outerRef={outerRef}
 							width={width}
 							height={height - headerHeight}
 							innerRef={innerRef}
@@ -135,6 +128,7 @@ const RenderVirtualizedTableBody =
 							itemCount={itemCount}
 							itemData={itemData}
 							onItemsRendered={onItemsRendered}
+							outerRef={outerRef}
 							className='variable-size-list'
 						>
 							{RenderVirtualizedTableRowWithRef}

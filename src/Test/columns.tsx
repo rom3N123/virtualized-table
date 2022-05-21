@@ -16,14 +16,10 @@ const NameCell: CellRenderer<Data, string> = ({ value }) => {
 	);
 };
 
-const H: HeaderRenderer<Data, string> = () => {
-	return <div>Hello</div>;
-};
-
 const columns: Column<Data>[] = [
 	{
 		id: 'dnd',
-		Header: H,
+		Header: () => <HeaderCell value='Header 1' />,
 		Cell: NameCell,
 		accessor: 'age',
 		grow: 1,
@@ -31,7 +27,7 @@ const columns: Column<Data>[] = [
 	},
 	{
 		id: '1',
-		Header: () => <HeaderCell value='Header 1' />,
+		Header: () => <HeaderCell value='Header 2' />,
 		accessor: 'name',
 		Cell: NameCell,
 		grow: 1,
