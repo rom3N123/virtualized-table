@@ -18,7 +18,7 @@ import {
 } from './VirtualizedTable.types';
 import { useSticky } from 'react-table-sticky';
 
-let VirtualizedTable = <
+const VirtualizedTable = <
 	D extends object = {},
 	ExtraItemProps extends object = {}
 >({
