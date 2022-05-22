@@ -27,8 +27,8 @@ export type VirtualizedTableProps<
 	getRowId: GetRowId<D>;
 	getItemSize: GetItemSize<D>;
 	headerHeight: number;
-	tableRef: RefObject<TableImperativeHandle<D>>;
-	extraPlugins?: PluginHook<D, any>[];
+	tableRef?: RefObject<TableImperativeHandle<D>>;
+	extraPlugins?: PluginHook<D>[];
 	TableBody?: <D extends object, ExtraItemProps extends object = {}>(
 		props: RenderVirtualizedTableBodyProps<D, ExtraItemProps>
 	) => ReactElement;
@@ -44,6 +44,7 @@ export type VirtualizedTableProps<
 	rowProps?: RowProps<D>;
 	className?: string;
 	itemExtraData?: ExtraItemProps;
+	preselectedRows?: D[];
 };
 
 export type RowProps<D extends object> = object | ((row: Row<D>) => object);

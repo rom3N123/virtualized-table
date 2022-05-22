@@ -1,5 +1,4 @@
 import { FinalTableInstance, RowWithProps } from 'react-table';
-import { PluginPrepareRow } from 'react-table';
 import { makePropGetter } from 'react-table';
 
 export type UseTableSelectionModeRowProps = {

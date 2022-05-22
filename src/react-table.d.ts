@@ -1,3 +1,4 @@
+import { TableLinkHighlightRowWithSelectionRowProps } from './components/VirtualizedTable/plugins/useLinkHighlightRowWithSelection/prepareRow';
 import { TableRowsSelectionRowProps } from './components/VirtualizedTable/plugins/useTableRowsSelection/prepareRow';
 import { TableHighlightRowProps } from './components/VirtualizedTable/plugins/useTableRowHighlight/prepareRow';
 import { DraggableProvided } from 'react-beautiful-dnd';
@@ -61,9 +62,19 @@ declare module 'react-table' {
 	};
 
 	export type RowWithProps<D extends object, P extends object = {}> = Row<D> &
-		TableHighlightRowProps<D> &
 		TableRowsSelectionRowProps<D> &
-		P;
+		TableLinkHighlightRowWithSelectionRowProps<D>;
+	P;
+
+	export interface Hooks<D extends object, P extends object = {}> {
+		useInstance: Array<(instance: TableInstanceWithProps<D, P>) => void>;
+		prepareRow: Array<
+			(
+				row: RowWithProps<D, any>,
+				meta: Meta<D> & { instance: TableInstanceWithProps<D, any> }
+			) => void
+		>;
+	}
 
 	export type CellRenderer<
 		D extends object,
@@ -89,7 +100,7 @@ declare module 'react-table' {
 		grow?: number;
 	};
 
-	export interface UseTableColumnOptions<D extends object>
+	export interface ColumnInterface<D extends object = {}>
 		extends CustomColumnProps {
 		Cell?: CellRenderer<D>;
 		Header?: HeaderRenderer<D>;

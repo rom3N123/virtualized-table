@@ -1,4 +1,3 @@
-import { Row } from 'react-table';
 import { Dispatch, SetStateAction } from 'react';
 
 type CombineFunctions = (

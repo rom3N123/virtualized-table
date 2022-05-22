@@ -1,6 +1,5 @@
 import { Hooks } from 'react-table';
-import { PluginHook } from 'react-table';
-import useInstance from './useInstance';
+import useInstance, { InstanceProps } from './useInstance';
 import prepareRow from './prepareRow';
 
 export const USE_LINK_HIGHLIGHT_ROW_WITH_SELECTION =
@@ -10,9 +9,8 @@ export const USE_LINK_HIGHLIGHT_ROW_WITH_SELECTION =
  * Хук для связи выделения таблицы с кнопками CTRL/SHIFT
  */
 const useLinkHighlightRowWithSelection = <D extends object>(
-	hooks: Hooks<D, any>
+	hooks: Hooks<D, InstanceProps<D>>
 ) => {
-	// @ts-ignore
 	hooks.useInstance.push(useInstance);
 	hooks.prepareRow.push(prepareRow);
 };

@@ -8,7 +8,6 @@ export const USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME = 'useTableRowHighlight';
  * Хук для выделения строки в таблице
  */
 const useTableRowHighlight = <D extends object>(hooks: Hooks<D, any>) => {
-	// @ts-ignore
 	hooks.useInstance.push(useInstance);
 	hooks.prepareRow.push(prepareRow);
 };

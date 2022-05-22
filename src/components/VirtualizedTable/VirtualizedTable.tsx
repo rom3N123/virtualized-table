@@ -79,43 +79,45 @@ function VirtualizedTable<
 		instance;
 
 	return (
-		<AutoSizer>
-			{({ width, height }) => (
-				<div {...getTableProps({ style: { width, height } })}>
-					{HeaderRow && (
-						<HeaderRow
-							headerRef={getHeaderRef}
-							headerGroups={headerGroups}
-							height={headerHeight}
-						/>
-					)}
+		<div style={{ height: '100%' }}>
+			<AutoSizer>
+				{({ width, height }) => (
+					<div {...getTableProps({ style: { width, height } })}>
+						{HeaderRow && (
+							<HeaderRow
+								headerRef={getHeaderRef}
+								headerGroups={headerGroups}
+								height={headerHeight}
+							/>
+						)}
 
-					<TableBody<D, ExtraItemProps>
-						data={data}
-						imperativeHandle={imperativeHandle}
-						getItemSize={getItemSize}
-						getRowId={getRowId}
-						instance={instance}
-						width={width}
-						height={height}
-						getTableBodyProps={getTableBodyProps}
-						headerHeight={headerHeight}
-						prepareRow={prepareRow}
-						ItemLoader={ItemLoader}
-						rows={rows}
-						RenderItem={RenderItem}
-						hasNextPage={hasNextPage}
-						itemExtraData={itemExtraData}
-						listRef={listRef}
-						isLoadingNextPage={isLoadingNextPage}
-						loadPerPage={loadPerPage}
-						rowProps={rowProps}
-						onLoadPage={onLoadPage}
-						outerRef={getContainerRef}
-					/>
-				</div>
-			)}
-		</AutoSizer>
+						<TableBody<D, ExtraItemProps>
+							data={data}
+							imperativeHandle={imperativeHandle}
+							getItemSize={getItemSize}
+							getRowId={getRowId}
+							instance={instance}
+							width={width}
+							height={height}
+							getTableBodyProps={getTableBodyProps}
+							headerHeight={headerHeight}
+							prepareRow={prepareRow}
+							ItemLoader={ItemLoader}
+							rows={rows}
+							RenderItem={RenderItem}
+							hasNextPage={hasNextPage}
+							itemExtraData={itemExtraData}
+							listRef={listRef}
+							isLoadingNextPage={isLoadingNextPage}
+							loadPerPage={loadPerPage}
+							rowProps={rowProps}
+							onLoadPage={onLoadPage}
+							outerRef={getContainerRef}
+						/>
+					</div>
+				)}
+			</AutoSizer>
+		</div>
 	);
 }
 

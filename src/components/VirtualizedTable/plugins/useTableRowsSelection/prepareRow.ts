@@ -7,6 +7,7 @@ export type TableRowsSelectionRowProps<D extends object> = Pick<
 	| 'clearSelectedRows'
 	| 'toggleRowSelected'
 	| 'toggleAllRowsSelected'
+	| 'getSelectedRows'
 >;
 
 const prepareRow = <D extends object>(

@@ -41,8 +41,6 @@ const useNewSyncHorizontalScroll = () => {
 		setIsHeaderMounted(true);
 	};
 
-	console.log(containerRef.current, headerRef.current);
-
 	const getContainerRef = (node: HTMLElement | null): void => {
 		containerRef.current = node?.children[0] as HTMLElement;
 		setIsContainerMounted(true);

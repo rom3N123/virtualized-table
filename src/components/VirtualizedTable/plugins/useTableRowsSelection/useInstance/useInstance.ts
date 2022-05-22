@@ -1,3 +1,4 @@
+import { TableInstanceWithProps } from 'react-table';
 import { ProxyTarget } from './../../utils';
 import { UseRowsRefsReturn } from './../../useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import { TableSelectionModeInstanceProps } from './../../useTableSelectionMode/useInstance';
@@ -5,7 +6,7 @@ import { USE_TABLE_CORE_PLUGIN_NAME } from './../../useTableCore/useTableCore';
 import { useEffect, useState, RefObject } from 'react';
 import useObservable from '../../../../../hooks/useObservable';
 import Observable from '../../../../../helpers/Observable';
-import { ensurePluginOrder, TableInstance, Row } from 'react-table';
+import { ensurePluginOrder, Row } from 'react-table';
 import useSelectedRowsRefs from './hooks/useSelectedRowsRefs/useSelectedRowsRefs';
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection';
 
@@ -21,10 +22,14 @@ export type TableRowsSelectionInstanceProps<D extends object> = {
 	getSelectedRows: () => Row<D>[];
 };
 
+export type InstanceProps<D extends object> = TableSelectionModeInstanceProps &
+	UseRowsRefsReturn<D> & { preselectedRows: D[] };
+
+export type TableRowsSelectionInstance<D extends object> =
+	TableInstanceWithProps<D, InstanceProps<D>>;
+
 const useInstance = <D extends object>(
-	instance: TableInstance<D> &
-		TableSelectionModeInstanceProps &
-		UseRowsRefsReturn<D>
+	instance: TableRowsSelectionInstance<D>
 ) => {
 	const {
 		rows,
@@ -52,14 +57,14 @@ const useInstance = <D extends object>(
 	useEffect(() => {
 		if (preselectedRows?.length) {
 			const instanceRows = preselectedRows
-				.map(selectedRow => getRowId(selectedRow))
+				.map((selectedRow, index) => getRowId!(selectedRow, index))
 				.map(rowId => rowsById[rowId]);
 
 			for (const instanceRow of instanceRows) {
 				selectedCacheByIdRef.current[instanceRow.id] = instanceRow;
 			}
 			selectedCacheArrayRef.current.value = [
-				...instanceRows,
+				...instanceRows.map(row => row.id),
 				...selectedCacheArrayRef.current.value,
 			];
 		}

@@ -1,7 +1,7 @@
 import { TableRowsSelectionInstanceProps } from './../useTableRowsSelection/useInstance/useInstance';
 import { TableHighlightInstanceProps } from './../useTableRowHighlight/useInstance';
 import { TableSelectionModeInstanceProps } from './../useTableSelectionMode/useInstance';
-import { TableInstance } from 'react-table';
+import { TableInstanceWithProps } from 'react-table';
 import { ensurePluginOrder } from 'react-table';
 import { USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME } from '../useTableRowHighlight/useTableRowHighlight';
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection/useTableRowsSelection';
@@ -11,14 +11,13 @@ import { MouseEvent } from 'react';
 
 type AnyCb = (...args: any[]) => any;
 
-type Instance<D extends object> = TableInstance<D> &
-	TableSelectionModeInstanceProps &
+export type InstanceProps<D extends object> = TableSelectionModeInstanceProps &
 	TableHighlightInstanceProps<D> &
 	TableRowsSelectionInstanceProps<D> & {
 		shouldForceHighlight?: boolean;
 	};
 
-type OnRowClick = (index: number, event?: MouseEvent) => void;
+type OnRowClick = (index: number, event: MouseEvent) => void;
 type KeyboardClickWrapper = (cb: AnyCb) => OnRowClick;
 
 export type TableLinkHighlightRowWithSelectionInstanceProps = {
@@ -26,7 +25,9 @@ export type TableLinkHighlightRowWithSelectionInstanceProps = {
 	toggleRowSelected: OnRowClick;
 };
 
-const useInstance = <D extends object>(instance: Instance<D>) => {
+const useInstance = <D extends object>(
+	instance: TableInstanceWithProps<D, InstanceProps<D>>
+) => {
 	const {
 		rows,
 		plugins,

@@ -4,8 +4,7 @@ import useRenderRowHighlight from './useRenderRowHighlight';
 import TableRow, { TableRowProps } from '../../components/TableRow/TableRow';
 import { RenderItemProps } from '../../VirtualizedTable.types';
 import { RowRefMethods } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
-import { RowCellRenderProps } from '../../components/RenderVirtualizedTableBody';
-import { RowWithProps } from 'react-table';
+import { RowWithProps, RowCellRenderProps } from 'react-table';
 
 function RenderTableRow<D extends object = {}, E extends object = {}>(
 	{ index, style, data }: RenderItemProps<D, E>,

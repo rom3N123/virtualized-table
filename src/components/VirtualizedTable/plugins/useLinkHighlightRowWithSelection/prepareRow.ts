@@ -1,8 +1,8 @@
 import { RowWithProps, FinalTableInstance } from 'react-table';
-import { TableHighlightInstanceProps } from './../useTableRowHighlight/useInstance';
+import { TableLinkHighlightRowWithSelectionInstanceProps } from './useInstance';
 
-export type TableLinkHighlightRowWithSelectionRowProps<D extends object> = Pick<
-	TableHighlightInstanceProps<D>,
+export type TableLinkHighlightRowWithSelectionRowProps = Pick<
+	TableLinkHighlightRowWithSelectionInstanceProps,
 	'onHighlightRow'
 >;
 
