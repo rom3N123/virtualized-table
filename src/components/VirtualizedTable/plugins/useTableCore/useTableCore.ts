@@ -9,7 +9,7 @@ export const USE_TABLE_CORE_PLUGIN_NAME = 'useTableCore';
  * Должен инициализироваться первым
  */
 const useTableCore = <D extends object>(hooks: Hooks<D, any>) => {
-	hooks.useInstance.push(useInstance);
+    hooks.useInstance.push(useInstance);
 };
 
 useTableCore.pluginName = USE_TABLE_CORE_PLUGIN_NAME;

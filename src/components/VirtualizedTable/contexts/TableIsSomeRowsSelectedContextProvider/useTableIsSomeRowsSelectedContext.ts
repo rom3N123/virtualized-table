@@ -1,12 +1,11 @@
 import { useContext } from 'react';
 import {
-	TableIsSomeRowsSelectedContextContext,
-	TableIsSomeRowsSelectedContextValue,
+    TableIsSomeRowsSelectedContextContext,
+    TableIsSomeRowsSelectedContextValue,
 } from './TableIsSomeRowsSelectedContextProvider';
 
-const useTableIsSomeRowsSelectedContext =
-	(): TableIsSomeRowsSelectedContextValue => {
-		return useContext(TableIsSomeRowsSelectedContextContext);
-	};
+const useTableIsSomeRowsSelectedContext = (): TableIsSomeRowsSelectedContextValue => {
+    return useContext(TableIsSomeRowsSelectedContextContext);
+};
 
 export default useTableIsSomeRowsSelectedContext;

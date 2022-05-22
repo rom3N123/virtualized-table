@@ -11,172 +11,163 @@ import useSelectedRowsRefs from './hooks/useSelectedRowsRefs/useSelectedRowsRefs
 import { USE_TABLE_ROWS_SELECTION_PLUGIN_NAME } from '../useTableRowsSelection';
 
 export type TableRowsSelectionInstanceProps<D extends object> = {
-	areAllRowsSelectedObservable: Observable<boolean>;
-	selectedCacheById: Record<string, Row<D>>;
-	selectedCacheArrayRef: RefObject<ProxyTarget<string[]>>;
-	toggleRowSelected: (index: number) => void;
-	toggleAllRowsSelected: () => void;
-	getIsSelectedRow: (row: Row<D>) => boolean;
-	clearSelectedRows: () => void;
-	deleteRowsFromSelected: (rowsIds: (number | string)[]) => void;
-	getSelectedRows: () => Row<D>[];
+    areAllRowsSelectedObservable: Observable<boolean>;
+    selectedCacheById: Record<string, Row<D>>;
+    selectedCacheArrayRef: RefObject<ProxyTarget<string[]>>;
+    toggleRowSelected: (index: number) => void;
+    toggleAllRowsSelected: () => void;
+    getIsSelectedRow: (row: Row<D>) => boolean;
+    clearSelectedRows: () => void;
+    deleteRowsFromSelected: (rowsIds: (number | string)[]) => void;
+    getSelectedRows: () => Row<D>[];
 };
 
 export type InstanceProps<D extends object> = TableSelectionModeInstanceProps &
-	UseRowsRefsReturn<D> & { preselectedRows: D[] };
+    UseRowsRefsReturn<D> & { preselectedRows: D[] };
 
-export type TableRowsSelectionInstance<D extends object> =
-	TableInstanceWithProps<D, InstanceProps<D>>;
+export type TableRowsSelectionInstance<D extends object> = TableInstanceWithProps<
+    D,
+    InstanceProps<D>
+>;
 
-const useInstance = <D extends object>(
-	instance: TableRowsSelectionInstance<D>
-) => {
-	const {
-		rows,
-		refs,
-		getRowRef,
-		plugins,
-		isSelectionModeObservable,
-		rowsById,
-		preselectedRows,
-		getRowId,
-	} = instance;
+const useInstance = <D extends object>(instance: TableRowsSelectionInstance<D>) => {
+    const {
+        rows,
+        refs,
+        getRowRef,
+        plugins,
+        isSelectionModeObservable,
+        rowsById,
+        preselectedRows,
+        getRowId,
+    } = instance;
 
-	const { selectedCacheByIdRef, selectedCacheArrayRef } =
-		useSelectedRowsRefs<D>();
-	const [areAllRowsSelectedObservable] = useState(new Observable(false));
+    const { selectedCacheByIdRef, selectedCacheArrayRef } = useSelectedRowsRefs<D>();
+    const [areAllRowsSelectedObservable] = useState(new Observable(false));
 
-	const isSelectionMode = useObservable(isSelectionModeObservable);
+    const isSelectionMode = useObservable(isSelectionModeObservable);
 
-	ensurePluginOrder(
-		plugins,
-		[USE_TABLE_CORE_PLUGIN_NAME],
-		USE_TABLE_ROWS_SELECTION_PLUGIN_NAME
-	);
+    ensurePluginOrder(plugins, [USE_TABLE_CORE_PLUGIN_NAME], USE_TABLE_ROWS_SELECTION_PLUGIN_NAME);
 
-	useEffect(() => {
-		if (preselectedRows?.length) {
-			const instanceRows = preselectedRows
-				.map((selectedRow, index) => getRowId!(selectedRow, index))
-				.map(rowId => rowsById[rowId]);
+    useEffect(() => {
+        if (preselectedRows?.length) {
+            const instanceRows = preselectedRows
+                .map((selectedRow, index) => getRowId!(selectedRow, index))
+                .map((rowId) => rowsById[rowId]);
 
-			for (const instanceRow of instanceRows) {
-				selectedCacheByIdRef.current[instanceRow.id] = instanceRow;
-			}
-			selectedCacheArrayRef.current.value = [
-				...instanceRows.map(row => row.id),
-				...selectedCacheArrayRef.current.value,
-			];
-		}
-	}, [preselectedRows]);
+            for (const instanceRow of instanceRows) {
+                selectedCacheByIdRef.current[instanceRow.id] = instanceRow;
+            }
+            selectedCacheArrayRef.current.value = [
+                ...instanceRows.map((row) => row.id),
+                ...selectedCacheArrayRef.current.value,
+            ];
+        }
+    }, [preselectedRows]);
 
-	const clearSelectedRows = () => {
-		for (const rowId in refs.current) {
-			const { current } = getRowRef(rowId);
+    const clearSelectedRows = () => {
+        for (const rowId in refs.current) {
+            const { current } = getRowRef(rowId);
 
-			current?.setIsSelected(false);
-		}
+            current?.setIsSelected(false);
+        }
 
-		selectedCacheByIdRef.current = {};
+        selectedCacheByIdRef.current = {};
 
-		selectedCacheArrayRef.current.value = [];
+        selectedCacheArrayRef.current.value = [];
 
-		areAllRowsSelectedObservable.set(false);
-	};
+        areAllRowsSelectedObservable.set(false);
+    };
 
-	const deleteRowsFromSelected = (rowsIds: (number | string)[]) => {
-		if (rows.length === rowsIds.length) {
-			selectedCacheByIdRef.current = {};
-			selectedCacheArrayRef.current.value = [];
-		} else {
-			for (const rowId of rowsIds) {
-				delete selectedCacheByIdRef.current[rowId];
-			}
+    const deleteRowsFromSelected = (rowsIds: (number | string)[]) => {
+        if (rows.length === rowsIds.length) {
+            selectedCacheByIdRef.current = {};
+            selectedCacheArrayRef.current.value = [];
+        } else {
+            for (const rowId of rowsIds) {
+                delete selectedCacheByIdRef.current[rowId];
+            }
 
-			selectedCacheArrayRef.current.value =
-				selectedCacheArrayRef.current.value.filter(
-					rowId => !rowsIds.includes(rowId)
-				);
-		}
-	};
+            selectedCacheArrayRef.current.value = selectedCacheArrayRef.current.value.filter(
+                (rowId) => !rowsIds.includes(rowId)
+            );
+        }
+    };
 
-	const toggleRowSelected = (index: number) => {
-		const row = rows[index];
-		const { id } = row;
-		const isSelected = Boolean(selectedCacheByIdRef.current[id]);
-		const rowRef = getRowRef(id);
+    const toggleRowSelected = (index: number) => {
+        const row = rows[index];
+        const { id } = row;
+        const isSelected = Boolean(selectedCacheByIdRef.current[id]);
+        const rowRef = getRowRef(id);
 
-		rowRef?.current?.setIsSelected(prevState => !prevState);
+        rowRef?.current?.setIsSelected((prevState) => !prevState);
 
-		if (isSelected) {
-			delete selectedCacheByIdRef.current[id];
+        if (isSelected) {
+            delete selectedCacheByIdRef.current[id];
 
-			selectedCacheArrayRef.current.value =
-				selectedCacheArrayRef.current.value.filter(rowId => rowId !== id);
+            selectedCacheArrayRef.current.value = selectedCacheArrayRef.current.value.filter(
+                (rowId) => rowId !== id
+            );
 
-			if (areAllRowsSelectedObservable.get()) {
-				areAllRowsSelectedObservable.set(false);
-			}
-		} else {
-			selectedCacheArrayRef.current.value = [
-				...selectedCacheArrayRef.current.value,
-				row.id,
-			];
-			selectedCacheByIdRef.current[id] = row;
+            if (areAllRowsSelectedObservable.get()) {
+                areAllRowsSelectedObservable.set(false);
+            }
+        } else {
+            selectedCacheArrayRef.current.value = [...selectedCacheArrayRef.current.value, row.id];
+            selectedCacheByIdRef.current[id] = row;
 
-			if (selectedCacheArrayRef.current.value.length === rows.length) {
-				areAllRowsSelectedObservable.set(true);
-			}
-		}
-	};
+            if (selectedCacheArrayRef.current.value.length === rows.length) {
+                areAllRowsSelectedObservable.set(true);
+            }
+        }
+    };
 
-	const toggleAllRowsSelected = () => {
-		if (selectedCacheArrayRef.current.value.length !== rows.length) {
-			for (const rowId in refs.current) {
-				const { current } = getRowRef(rowId);
+    const toggleAllRowsSelected = () => {
+        if (selectedCacheArrayRef.current.value.length !== rows.length) {
+            for (const rowId in refs.current) {
+                const { current } = getRowRef(rowId);
 
-				current?.setIsSelected(true);
-			}
+                current?.setIsSelected(true);
+            }
 
-			selectedCacheByIdRef.current = rowsById;
-			selectedCacheArrayRef.current.value = rows.map(row => row.id);
+            selectedCacheByIdRef.current = rowsById;
+            selectedCacheArrayRef.current.value = rows.map((row) => row.id);
 
-			areAllRowsSelectedObservable.set(true);
-		} else {
-			clearSelectedRows();
-		}
-	};
+            areAllRowsSelectedObservable.set(true);
+        } else {
+            clearSelectedRows();
+        }
+    };
 
-	const getIsSelectedRow = ({ id }: Row<D>) =>
-		Boolean(selectedCacheByIdRef.current[id]);
+    const getIsSelectedRow = ({ id }: Row<D>) => Boolean(selectedCacheByIdRef.current[id]);
 
-	useEffect(() => {
-		if (
-			!isSelectionMode &&
-			selectedCacheArrayRef.current.value.length &&
-			!preselectedRows?.length
-		) {
-			clearSelectedRows();
-		}
-	}, [isSelectionMode]);
+    useEffect(() => {
+        if (
+            !isSelectionMode &&
+            selectedCacheArrayRef.current.value.length &&
+            !preselectedRows?.length
+        ) {
+            clearSelectedRows();
+        }
+    }, [isSelectionMode]);
 
-	const getSelectedRows = () => {
-		return selectedCacheArrayRef.current.value.map(rowId => rowsById[rowId]);
-	};
+    const getSelectedRows = () => {
+        return selectedCacheArrayRef.current.value.map((rowId) => rowsById[rowId]);
+    };
 
-	const instanceProps: TableRowsSelectionInstanceProps<D> = {
-		areAllRowsSelectedObservable,
-		selectedCacheById: selectedCacheByIdRef.current,
-		selectedCacheArrayRef,
-		toggleRowSelected,
-		toggleAllRowsSelected,
-		getIsSelectedRow,
-		clearSelectedRows,
-		deleteRowsFromSelected,
-		getSelectedRows,
-	};
+    const instanceProps: TableRowsSelectionInstanceProps<D> = {
+        areAllRowsSelectedObservable,
+        selectedCacheById: selectedCacheByIdRef.current,
+        selectedCacheArrayRef,
+        toggleRowSelected,
+        toggleAllRowsSelected,
+        getIsSelectedRow,
+        clearSelectedRows,
+        deleteRowsFromSelected,
+        getSelectedRows,
+    };
 
-	Object.assign(instance, instanceProps);
+    Object.assign(instance, instanceProps);
 };
 
 export default useInstance;

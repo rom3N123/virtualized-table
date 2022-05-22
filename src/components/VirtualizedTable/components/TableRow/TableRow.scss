@@ -1,12 +1,12 @@
 .row {
-	--transition: all 0.1s ease;
-	transition: var(--transition);
+    --transition: all 0.1s ease;
+    transition: var(--transition);
 
-	&Data {
-		border-bottom: 1px solid var(--table-border);
-	}
+    &Data {
+        border-bottom: 1px solid var(--table-border);
+    }
 
-	&.highlighted {
-		background-color: var(--table-highlight);
-	}
+    &.highlighted {
+        background-color: var(--table-highlight);
+    }
 }

@@ -7,41 +7,41 @@ import { useTableIsSelectionModeContext } from '../../contexts/TableIsSelectionM
 type SelectionModeObservable = Observable<boolean>;
 
 export type TableSelectionModeInstanceProps = {
-	enableTableSelectionMode: () => void;
-	disableTableSelectionMode: () => void;
-	changeTableSelectionMode: () => void;
-	isSelectionModeObservable: SelectionModeObservable;
+    enableTableSelectionMode: () => void;
+    disableTableSelectionMode: () => void;
+    changeTableSelectionMode: () => void;
+    isSelectionModeObservable: SelectionModeObservable;
 };
 
 const useInstance = <D extends object>(instance: TableInstance<D>) => {
-	const [isSelectionModeObservable] = useState<SelectionModeObservable>(
-		new Observable<boolean>(false)
-	);
-	const { setIsSelectionMode } = useTableIsSelectionModeContext() || {};
+    const [isSelectionModeObservable] = useState<SelectionModeObservable>(
+        new Observable<boolean>(false)
+    );
+    const { setIsSelectionMode } = useTableIsSelectionModeContext() || {};
 
-	const setValue = (value: boolean) => {
-		isSelectionModeObservable.set(value);
-		setIsSelectionMode?.(value);
-	};
+    const setValue = (value: boolean) => {
+        isSelectionModeObservable.set(value);
+        setIsSelectionMode?.(value);
+    };
 
-	const enableTableSelectionMode = () => {
-		setValue(true);
-	};
+    const enableTableSelectionMode = () => {
+        setValue(true);
+    };
 
-	const disableTableSelectionMode = () => {
-		setValue(false);
-	};
+    const disableTableSelectionMode = () => {
+        setValue(false);
+    };
 
-	const changeTableSelectionMode = isSelectionModeObservable.get()
-		? disableTableSelectionMode
-		: enableTableSelectionMode;
+    const changeTableSelectionMode = isSelectionModeObservable.get()
+        ? disableTableSelectionMode
+        : enableTableSelectionMode;
 
-	Object.assign(instance, {
-		enableTableSelectionMode,
-		disableTableSelectionMode,
-		changeTableSelectionMode,
-		isSelectionModeObservable,
-	});
+    Object.assign(instance, {
+        enableTableSelectionMode,
+        disableTableSelectionMode,
+        changeTableSelectionMode,
+        isSelectionModeObservable,
+    });
 };
 
 export default useInstance;
