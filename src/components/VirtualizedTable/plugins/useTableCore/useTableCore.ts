@@ -1,6 +1,5 @@
 import { Hooks } from 'react-table';
-import { PluginHook } from 'react-table';
-import useInstance from './useInstance/useInstance';
+import { useInstance } from './useInstance';
 
 export const USE_TABLE_CORE_PLUGIN_NAME = 'useTableCore';
 
@@ -9,9 +8,9 @@ export const USE_TABLE_CORE_PLUGIN_NAME = 'useTableCore';
  * Должен инициализироваться первым
  */
 const useTableCore = <D extends object>(hooks: Hooks<D, any>) => {
-    hooks.useInstance.push(useInstance);
+	hooks.useInstance.push(useInstance);
 };
 
 useTableCore.pluginName = USE_TABLE_CORE_PLUGIN_NAME;
 
-export default useTableCore;
+export { useTableCore };

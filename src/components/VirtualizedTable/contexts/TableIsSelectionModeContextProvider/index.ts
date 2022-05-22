@@ -1,2 +1,2 @@
-export { default as useTableIsSelectionModeContext } from './useTableIsSelectionModeContext';
-export { default } from './TableIsSelectionModeContextProvider';
+export * from './TableIsSelectionModeContextProvider';
+export * from './useTableIsSelectionModeContext';

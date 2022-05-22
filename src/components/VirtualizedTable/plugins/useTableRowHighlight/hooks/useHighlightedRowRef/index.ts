@@ -1,1 +1,1 @@
-export { default } from './useHighlightedRowRef';
+export * from './useHighlightedRowRef';

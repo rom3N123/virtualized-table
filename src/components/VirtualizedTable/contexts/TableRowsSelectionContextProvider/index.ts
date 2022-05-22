@@ -1,2 +1,2 @@
-export { default as useTableRowsSelectionContext } from './useTableRowsSelectionContext';
-export { default } from './TableRowsSelectionContextProvider';
+export * from './TableRowsSelectionContextProvider';
+export * from './useTableRowsSelectionContext';

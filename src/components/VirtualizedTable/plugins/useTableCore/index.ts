@@ -1,1 +1,2 @@
-export { default } from './useTableCore';
+export * from './useTableCore';
+export * from './useInstance';

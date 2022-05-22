@@ -1,11 +1,10 @@
 import { useContext } from 'react';
 import {
-    TableIsSelectionModeContext,
-    TableSelectionModeContextValue,
+	TableIsSelectionModeContext,
+	TableSelectionModeContextValue,
 } from './TableIsSelectionModeContextProvider';
 
-const useTableIsSelectionModeContext = (): TableSelectionModeContextValue => {
-    return useContext(TableIsSelectionModeContext);
-};
-
-export default useTableIsSelectionModeContext;
+export const useTableIsSelectionModeContext =
+	(): TableSelectionModeContextValue => {
+		return useContext(TableIsSelectionModeContext);
+	};

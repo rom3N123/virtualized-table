@@ -1,1 +1,3 @@
-export { default } from './useTableSelectionMode';
+export * from './useInstance';
+export * from './prepareRow';
+export * from './useTableSelectionMode';

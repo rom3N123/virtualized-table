@@ -9,9 +9,9 @@ import {
 import Header from '../HeaderRow';
 import VirtualizedTableBody from './components/VirtualizedTableBody';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import RenderVirtualizedTableRow from './renderComponents/RenderVirtualizedTableRow';
+import { RenderVirtualizedTableRow } from './renderComponents';
 import LoadingItem from '../LoadingItem';
-import useNewSyncHorizontalScroll from '../../hooks/useNewSyncHorizontalScroll';
+import { useNewSyncHorizontalScroll } from '../../hooks';
 import {
 	VirtualizedTableProps,
 	TableImperativeHandle,

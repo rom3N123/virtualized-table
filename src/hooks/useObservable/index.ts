@@ -1,1 +1,1 @@
-export { default } from './useObservable';
+export * from './useObservable';

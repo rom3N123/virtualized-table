@@ -1,1 +1,2 @@
-export { default } from './LoadingItem';
+export { LoadingItem as default } from './LoadingItem';
+export * from './LoadingItem.constants';

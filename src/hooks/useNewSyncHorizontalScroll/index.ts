@@ -1,1 +1,1 @@
-export { default } from './useNewSyncHorizontalScroll';
+export * from './useNewSyncHorizontalScroll';

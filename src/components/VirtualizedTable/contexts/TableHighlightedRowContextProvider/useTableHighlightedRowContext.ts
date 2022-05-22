@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import {
-    TableHighlightedRowContext,
-    TableHighlightedRowContextValue,
+	TableHighlightedRowContext,
+	TableHighlightedRowContextValue,
 } from './TableHighlightedRowContextProvider';
 
-const useTableHighlightedRowContext = <T extends object>(): TableHighlightedRowContextValue<T> => {
-    return useContext(TableHighlightedRowContext);
+export const useTableHighlightedRowContext = <
+	T extends object
+>(): TableHighlightedRowContextValue<T> => {
+	return useContext(TableHighlightedRowContext);
 };
-
-export default useTableHighlightedRowContext;

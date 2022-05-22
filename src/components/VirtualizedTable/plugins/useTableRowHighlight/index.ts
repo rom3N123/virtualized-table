@@ -1,1 +1,3 @@
-export { default } from './useTableRowHighlight';
+export * from './prepareRow';
+export * from './useInstance';
+export * from './useTableRowHighlight';
