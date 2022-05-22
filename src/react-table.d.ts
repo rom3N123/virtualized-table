@@ -1,6 +1,5 @@
 import { TableLinkHighlightRowWithSelectionRowProps } from './components/VirtualizedTable/plugins/useLinkHighlightRowWithSelection/prepareRow';
 import { TableRowsSelectionRowProps } from './components/VirtualizedTable/plugins/useTableRowsSelection/prepareRow';
-import { TableHighlightRowProps } from './components/VirtualizedTable/plugins/useTableRowHighlight/prepareRow';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { TableLinkHighlightRowWithSelectionInstanceProps } from './components/VirtualizedTable/plugins/useLinkHighlightRowWithSelection/useInstance';
 import { TableSelectionModeInstanceProps } from './components/VirtualizedTable/plugins/useTableSelectionMode/useInstance';
