@@ -4,7 +4,7 @@ import { DroppableProvided } from 'react-beautiful-dnd';
 import { Row } from 'react-table';
 import clsx from 'clsx';
 
-export type TableRowProps<D extends object, R extends object = {}> = {
+export type RowTableProps<D extends object, R extends object = {}> = {
 	innerRef: DroppableProvided['innerRef'];
 	isHighlighted?: boolean;
 	onClick?: MouseEventHandler<HTMLTableRowElement>;
@@ -19,7 +19,7 @@ export const TableRow = <D extends object, R extends object = {}>({
 	row,
 	renderProps,
 	...otherRowProps
-}: TableRowProps<D, R>): ReactElement => {
+}: RowTableProps<D, R>): ReactElement => {
 	const { cells } = row;
 
 	return (

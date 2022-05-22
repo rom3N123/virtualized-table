@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { useRenderRowHighlight } from './useRenderRowHighlight';
-import TableRow, { TableRowProps } from '../../components/TableRow';
+import TableRow, { RowTableProps } from '../../components/TableRow';
 import { RenderItemProps } from '../../VirtualizedTable.types';
 import { RowRefMethods } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 import { RowWithProps, RowCellRenderProps } from 'react-table';
@@ -49,7 +49,7 @@ const RenderTableRow = <D extends object = {}, E extends object = {}>(
 		setIsHighlighted,
 	}));
 
-	const onHighlightRowHandler: TableRowProps<D>['onClick'] = event => {
+	const onHighlightRowHandler: RowTableProps<D>['onClick'] = event => {
 		(row as RowWithProps<D>).onHighlightRow(index, event);
 	};
 
