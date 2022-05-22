@@ -1,1 +1,1 @@
-export { default } from './LoadingItem';
+export { LoadingItem as default } from './LoadingItem';

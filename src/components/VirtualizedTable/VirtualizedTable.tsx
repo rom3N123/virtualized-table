@@ -6,7 +6,7 @@ import {
 	useExpanded,
 	useTable,
 } from 'react-table';
-import Header from '../HeaderRow/HeaderRow';
+import Header from '../HeaderRow';
 import VirtualizedTableBody from './components/VirtualizedTableBody';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import RenderVirtualizedTableRow from './renderComponents/RenderVirtualizedTableRow';
@@ -18,7 +18,7 @@ import {
 } from './VirtualizedTable.types';
 import { useSticky } from 'react-table-sticky';
 
-function VirtualizedTable<
+let VirtualizedTable = <
 	D extends object = {},
 	ExtraItemProps extends object = {}
 >({
@@ -41,7 +41,7 @@ function VirtualizedTable<
 	TableBody = VirtualizedTableBody,
 	extraPlugins = [],
 	...useTableProps
-}: VirtualizedTableProps<D, ExtraItemProps>): ReactElement {
+}: VirtualizedTableProps<D, ExtraItemProps>): ReactElement => {
 	const plugins = [...VIRTUALIZED_TABLE_PLUGINS, ...extraPlugins];
 
 	const { getContainerRef, getHeaderRef } = useNewSyncHorizontalScroll();
@@ -119,6 +119,6 @@ function VirtualizedTable<
 			</AutoSizer>
 		</div>
 	);
-}
+};
 
 export default memo(VirtualizedTable) as typeof VirtualizedTable;

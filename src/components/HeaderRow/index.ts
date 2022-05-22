@@ -1,1 +1,1 @@
-export { default } from './HeaderRow';
+export { HeaderRow as default } from './HeaderRow';
