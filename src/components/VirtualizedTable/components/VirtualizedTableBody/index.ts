@@ -1,1 +1,1 @@
-export { default } from './VirtualizedTableBody';
+export * from './VirtualizedTableBody';
