@@ -29,7 +29,7 @@ export type TableRowsSelectionUseInstanceProps<D extends object> =
 export type TableRowsSelectionInstance<D extends object> =
 	TableInstanceWithProps<D, TableRowsSelectionUseInstanceProps<D>>;
 
-export const useInstance = <D extends object>(
+const useInstance = <D extends object>(
 	instance: TableRowsSelectionInstance<D>
 ) => {
 	const {
@@ -179,3 +179,5 @@ export const useInstance = <D extends object>(
 
 	Object.assign(instance, instanceProps);
 };
+
+export default useInstance;

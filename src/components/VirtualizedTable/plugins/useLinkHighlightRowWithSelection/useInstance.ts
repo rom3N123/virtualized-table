@@ -26,7 +26,7 @@ export type TableLinkHighlightRowWithSelectionInstanceProps = {
 	toggleRowSelected: OnRowClick;
 };
 
-export const useInstance = <D extends object>(
+const useInstance = <D extends object>(
 	instance: TableInstanceWithProps<
 		D,
 		TableLinkHighlightRowWithSelectionInstance<D>
@@ -141,3 +141,5 @@ export const useInstance = <D extends object>(
 
 	Object.assign(instance, instanceProps);
 };
+
+export default useInstance;

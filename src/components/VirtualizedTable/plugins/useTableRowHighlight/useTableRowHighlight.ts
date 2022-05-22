@@ -1,6 +1,6 @@
 import { Hooks } from 'react-table';
 import prepareRow from './prepareRow';
-import { useInstance } from './useInstance';
+import useInstance from './useInstance';
 
 export const USE_TABLE_ROW_HIGHLIGHT_PLUGIN_NAME = 'useTableRowHighlight';
 

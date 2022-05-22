@@ -12,7 +12,7 @@ export type TableSelectionModeInstanceProps = {
 	isSelectionModeObservable: SelectionModeObservable;
 };
 
-export const useInstance = <D extends object>(instance: TableInstance<D>) => {
+const useInstance = <D extends object>(instance: TableInstance<D>) => {
 	const [isSelectionModeObservable] = useState<SelectionModeObservable>(
 		new Observable<boolean>(false)
 	);
@@ -44,3 +44,5 @@ export const useInstance = <D extends object>(instance: TableInstance<D>) => {
 
 	Object.assign(instance, instanceProps);
 };
+
+export default useInstance;

@@ -4,7 +4,7 @@ import { TableInstance } from 'react-table';
 
 export type TableCoreInstanceProps<D extends object> = UseRowsRefsReturn<D>;
 
-export const useInstance = <D extends object>(instance: TableInstance<D>) => {
+const useInstance = <D extends object>(instance: TableInstance<D>) => {
 	const { refs, initializeRef, deleteRef, getRowRef } = useRowsRefs<D>();
 
 	Object.assign(instance, {
@@ -14,3 +14,5 @@ export const useInstance = <D extends object>(instance: TableInstance<D>) => {
 		getRowRef,
 	});
 };
+
+export default useInstance;

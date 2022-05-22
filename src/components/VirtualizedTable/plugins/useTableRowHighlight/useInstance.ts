@@ -25,7 +25,7 @@ type Instance<D extends object> = TableInstance<D> &
 	UseRowsRefsReturn<D> &
 	TableSelectionModeInstanceProps;
 
-export const useInstance = <D extends object>(instance: Instance<D>): void => {
+const useInstance = <D extends object>(instance: Instance<D>): void => {
 	const { rows, plugins, rowsById, getRowRef, isSelectionModeObservable } =
 		instance;
 	const isSelectionMode = useObservable(isSelectionModeObservable);
@@ -126,3 +126,5 @@ export const useInstance = <D extends object>(instance: Instance<D>): void => {
 
 	Object.assign(instance, instanceProps);
 };
+
+export default useInstance;

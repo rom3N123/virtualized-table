@@ -1,6 +1,5 @@
 import { Hooks } from 'react-table';
-import {
-	useInstance,
+import useInstance, {
 	TableLinkHighlightRowWithSelectionInstance,
 } from './useInstance';
 import prepareRow from './prepareRow';

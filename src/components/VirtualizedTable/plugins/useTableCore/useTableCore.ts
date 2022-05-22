@@ -1,5 +1,5 @@
 import { Hooks } from 'react-table';
-import { useInstance } from './useInstance';
+import useInstance from './useInstance/useInstance';
 
 export const USE_TABLE_CORE_PLUGIN_NAME = 'useTableCore';
 
