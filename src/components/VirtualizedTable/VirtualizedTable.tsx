@@ -26,7 +26,7 @@ const VirtualizedTable = <
 	data,
 	columns,
 	getRowId,
-	HeaderRow,
+	Header = HeaderRow,
 	getItemSize,
 	headerHeight,
 	hasNextPage,
@@ -83,8 +83,8 @@ const VirtualizedTable = <
 			<AutoSizer>
 				{({ width, height }) => (
 					<div {...getTableProps({ style: { width, height } })}>
-						{HeaderRow && (
-							<HeaderRow
+						{Header && (
+							<Header
 								headerRef={getHeaderRef}
 								headerGroups={headerGroups}
 								height={headerHeight}
