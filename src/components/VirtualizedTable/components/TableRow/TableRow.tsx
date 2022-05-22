@@ -1,5 +1,4 @@
 import React, { MouseEventHandler, ReactElement } from 'react';
-import './TableRow.scss';
 import { DroppableProvided } from 'react-beautiful-dnd';
 import { Row } from 'react-table';
 import clsx from 'clsx';
@@ -24,7 +23,7 @@ export const TableRow = <D extends object, R extends object = {}>({
 
 	return (
 		<tr
-			className={clsx(['row', isHighlighted && 'highlighted'])}
+			className={clsx(['table-row', isHighlighted && 'highlighted'])}
 			ref={innerRef}
 			onClick={onClick}
 			{...otherRowProps}
@@ -35,7 +34,7 @@ export const TableRow = <D extends object, R extends object = {}>({
 
 				return (
 					<td
-						className='rowData'
+						className='table-row-data'
 						width={width}
 						{...getCellProps({
 							style: {
