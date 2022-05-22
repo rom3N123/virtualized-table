@@ -1,6 +1,5 @@
 {
-	"name": "virtualized-table",
-	"private": true,
+	"name": "@virtualized-table/table",
 	"version": "0.0.0",
 	"scripts": {
 		"dev": "vite",
@@ -32,5 +31,17 @@
 		"@typescript-eslint/parser": "^5.25.0",
 		"@vitejs/plugin-react": "^1.3.0",
 		"typescript": "^4.6.3"
-	}
+	},
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/rom3N123/virtualized-table.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/rom3N123/virtualized-table/issues"
+	},
+	"homepage": "https://github.com/rom3N123/virtualized-table#readme",
+	"description": ""
 }
