@@ -67,15 +67,6 @@ declare module 'react-table' {
         useInstance: Array<(instance: FinalTableInstance<D>) => void>;
     }
 
-    export type CustomColumnProps = {
-        grow?: number;
-    };
-
-    export interface ColumnInterface<D extends object = {}> extends CustomColumnProps {
-        Cell?: CellRenderer<D>;
-        Header?: HeaderRenderer<D>;
-    }
-
     export interface UseTableColumnProps<D extends object>
         extends UseResizeColumnsColumnProps<D>,
             UseSortByColumnProps<D>,
