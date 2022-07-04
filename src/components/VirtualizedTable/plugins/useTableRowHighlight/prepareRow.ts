@@ -1,5 +1,4 @@
-import { FinalTableInstance } from 'react-table';
-import { RowWithProps } from 'react-table';
+import { FinalTableInstance, RowWithProps } from 'react-table';
 import { TableHighlightInstanceProps } from './useInstance';
 
 export type TableHighlightRowProps<D extends object> = Pick<
@@ -9,7 +8,7 @@ export type TableHighlightRowProps<D extends object> = Pick<
 
 const prepareRow = <D extends object>(
     row: RowWithProps<D>,
-    { instance }: { instance: FinalTableInstance<D> }
+    { instance }: { instance: FinalTableInstance<D> },
 ) => {
     row.onHighlightRow = instance.onHighlightRow;
 };

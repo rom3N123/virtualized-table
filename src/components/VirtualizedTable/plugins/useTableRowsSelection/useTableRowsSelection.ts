@@ -1,8 +1,6 @@
-import { TableRowsSelectionUseInstanceProps } from './useInstance/useInstance';
 import { Hooks } from 'react-table';
-import defaultGetRowSelectionProps from './defaultGetRowSelectionProps';
-import prepareRow from './prepareRow';
-import useInstance from './useInstance/useInstance';
+import { prepareRow, defaultGetRowSelectionProps } from '.';
+import { TableRowsSelectionUseInstanceProps, useInstance } from './useInstance';
 
 export const USE_TABLE_ROWS_SELECTION_PLUGIN_NAME = 'useTableRowsSelection';
 
@@ -10,11 +8,11 @@ export const USE_TABLE_ROWS_SELECTION_PLUGIN_NAME = 'useTableRowsSelection';
  * Хук для выделения строк в таблице
  */
 const useTableRowsSelection = <D extends object>(
-	hooks: Hooks<D, TableRowsSelectionUseInstanceProps<D>>
+    hooks: Hooks<D, TableRowsSelectionUseInstanceProps<D>>,
 ) => {
-	hooks.getRowSelectionProps = [defaultGetRowSelectionProps];
-	hooks.useInstance.push(useInstance);
-	hooks.prepareRow.push(prepareRow);
+    hooks.getRowSelectionProps = [defaultGetRowSelectionProps];
+    hooks.useInstance.push(useInstance);
+    hooks.prepareRow.push(prepareRow);
 };
 
 useTableRowsSelection.pluginName = USE_TABLE_ROWS_SELECTION_PLUGIN_NAME;

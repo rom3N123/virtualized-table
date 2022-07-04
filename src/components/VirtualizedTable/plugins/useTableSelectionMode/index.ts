@@ -1,3 +1,2 @@
-export * from './useInstance';
-export * from './prepareRow';
 export * from './useTableSelectionMode';
+export * from './defaultGetTableSelectionModeProps';

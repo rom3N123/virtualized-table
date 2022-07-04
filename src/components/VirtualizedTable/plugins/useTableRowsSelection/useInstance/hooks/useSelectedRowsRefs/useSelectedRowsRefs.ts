@@ -1,8 +1,10 @@
 import { Row } from 'react-table';
 import { useRef } from 'react';
-import { useTableIsSomeRowsSelectedContext } from '../../../../../contexts/TableIsSomeRowsSelectedContextProvider';
+import {
+    useTableIsSomeRowsSelectedContext,
+    useTableRowsSelectionContext,
+} from '../../../../../contexts';
 import { combineFunctions, getProxiedArray, ProxyTarget } from './../../../../utils';
-import { useTableRowsSelectionContext } from '../../../../../contexts/TableRowsSelectionContextProvider';
 
 export const useSelectedRowsRefs = <D extends object>() => {
     const { setSelectedRows } = useTableRowsSelectionContext() || {};

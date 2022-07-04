@@ -42,17 +42,6 @@ declare module 'react-table' {
         dragHandleProps: DraggableProvided['dragHandleProps'];
     };
 
-    export type FinalCellProps<
-        D extends object,
-        V = any,
-        E extends object = {},
-    > = FinalTableInstance<D, E> & {
-        column: ColumnInstance<D>;
-        row: Row<D>;
-        cell: Cell<D, V>;
-        value: CellValue<V>;
-    };
-
     export type TableColumnInterfaceBasedOnValue<D extends object = {}, V = any> = {
         Cell?: Renderer<FinalCellProps<D, V>> | undefined;
     };
@@ -71,18 +60,6 @@ declare module 'react-table' {
             ) => void
         >;
     }
-
-    export type CellRenderer<
-        D extends object,
-        V extends any,
-        E extends object = RowCellRenderProps,
-    > = Renderer<FinalCellProps<D, V, E>> | undefined;
-
-    export type HeaderRenderer<
-        D extends object,
-        V extends any,
-        E extends object = RowCellRenderProps,
-    > = Renderer<HeaderProps<D> & FinalCellProps<D, V, E>> | undefined;
 
     export interface TableRowProps extends TableCommonProps, TableSelectionModeRowProps {}
 

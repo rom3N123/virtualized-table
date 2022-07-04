@@ -1,6 +1,6 @@
 import { FinalTableInstance, PropGetter } from 'react-table';
 
-const defaultGetRowSelectionProps: PropGetter<object, object> = (props, { instance }) => {
+export const defaultGetRowSelectionProps: PropGetter<object, object> = (props, { instance }) => {
     const {
         getSelectedRows,
         clearSelectedRows,
@@ -20,5 +20,3 @@ const defaultGetRowSelectionProps: PropGetter<object, object> = (props, { instan
         },
     ];
 };
-
-export default defaultGetRowSelectionProps;

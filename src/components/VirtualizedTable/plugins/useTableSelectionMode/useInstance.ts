@@ -1,48 +1,46 @@
 import { useState } from 'react';
 import { TableInstance } from 'react-table';
 import { Observable } from '../../../../helpers';
-import { useTableIsSelectionModeContext } from '../../contexts/TableIsSelectionModeContextProvider';
+import { useTableIsSelectionModeContext } from '../../contexts';
 
 type SelectionModeObservable = Observable<boolean>;
 
 export type TableSelectionModeInstanceProps = {
-	enableTableSelectionMode: () => void;
-	disableTableSelectionMode: () => void;
-	changeTableSelectionMode: () => void;
-	isSelectionModeObservable: SelectionModeObservable;
+    enableTableSelectionMode: () => void;
+    disableTableSelectionMode: () => void;
+    changeTableSelectionMode: () => void;
+    isSelectionModeObservable: SelectionModeObservable;
 };
 
-const useInstance = <D extends object>(instance: TableInstance<D>) => {
-	const [isSelectionModeObservable] = useState<SelectionModeObservable>(
-		new Observable<boolean>(false)
-	);
-	const { setIsSelectionMode } = useTableIsSelectionModeContext() || {};
+export const useInstance = <D extends object>(instance: TableInstance<D>) => {
+    const [isSelectionModeObservable] = useState<SelectionModeObservable>(
+        new Observable<boolean>(false),
+    );
+    const { setIsSelectionMode } = useTableIsSelectionModeContext() || {};
 
-	const setValue = (value: boolean) => {
-		isSelectionModeObservable.set(value);
-		setIsSelectionMode?.(value);
-	};
+    const setValue = (value: boolean) => {
+        isSelectionModeObservable.set(value);
+        setIsSelectionMode?.(value);
+    };
 
-	const enableTableSelectionMode = () => {
-		setValue(true);
-	};
+    const enableTableSelectionMode = () => {
+        setValue(true);
+    };
 
-	const disableTableSelectionMode = () => {
-		setValue(false);
-	};
+    const disableTableSelectionMode = () => {
+        setValue(false);
+    };
 
-	const changeTableSelectionMode = isSelectionModeObservable.get()
-		? disableTableSelectionMode
-		: enableTableSelectionMode;
+    const changeTableSelectionMode = isSelectionModeObservable.get()
+        ? disableTableSelectionMode
+        : enableTableSelectionMode;
 
-	const instanceProps: TableSelectionModeInstanceProps = {
-		enableTableSelectionMode,
-		disableTableSelectionMode,
-		changeTableSelectionMode,
-		isSelectionModeObservable,
-	};
+    const instanceProps: TableSelectionModeInstanceProps = {
+        enableTableSelectionMode,
+        disableTableSelectionMode,
+        changeTableSelectionMode,
+        isSelectionModeObservable,
+    };
 
-	Object.assign(instance, instanceProps);
+    Object.assign(instance, instanceProps);
 };
-
-export default useInstance;
