@@ -1,22 +1,17 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
-        "useDefineForClassFields": true,
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "allowJs": false,
-        "skipLibCheck": true,
-        "esModuleInterop": false,
-        "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true,
-        "module": "ESNext",
+        "target": "es5",
+        "module": "commonjs",
         "moduleResolution": "Node",
         "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "jsx": "react-jsx",
         "outDir": "./dist",
         "rootDir": "./src",
-        "declaration": true
+        "declaration": true,
+        "jsx": "react-jsx",
+        "lib": ["DOM", "ES2015", "ES2015.promise", "ES2015.Proxy", "ES2017"],
+        "strict": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true
     },
     "include": ["src/**/*"]
 }

@@ -52,6 +52,7 @@ declare module 'react-table' {
         cell: Cell<D, V>;
         value: CellValue<V>;
     };
+
     export type TableColumnInterfaceBasedOnValue<D extends object = {}, V = any> = {
         Cell?: Renderer<FinalCellProps<D, V>> | undefined;
     };

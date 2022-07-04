@@ -2,11 +2,12 @@
     "name": "@virtualized-table/table",
     "version": "0.1.0",
     "main": "dist/index.js",
+    "type": "module",
     "files": [
         "dist/**/*"
     ],
     "scripts": {
-        "tsc": "tsc"
+        "tsc": "tsc --lib dom,ES2015,ES2015.Proxy,ES2017 -t es5 --jsx react-jsx"
     },
     "dependencies": {
         "clsx": "^1.1.1",
