@@ -1,1 +1,1 @@
-export { default } from './useSelectedRowsRefs';
+export * from './useSelectedRowsRefs';
