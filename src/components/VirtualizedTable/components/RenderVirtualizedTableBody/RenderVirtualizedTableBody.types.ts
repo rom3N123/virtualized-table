@@ -13,13 +13,13 @@ import {
     RenderItemProps,
     TableImperativeHandle,
     VirtualizedTableProps,
-} from '../../VirtualizedTable.types';
+} from '../../types';
 import { FC, Ref } from 'react';
 import { UseRowsRefsReturn } from '../../plugins/useTableCore/useInstance/hooks/useRowsRefs/useRowsRefs';
 
 export type RenderVirtualizedTableBodyProps<
     D extends object,
-    ExtraItemProps extends object = {}
+    ExtraItemProps extends object = {},
 > = Pick<
     VirtualizedTableProps<D, ExtraItemProps>,
     | 'getItemSize'
