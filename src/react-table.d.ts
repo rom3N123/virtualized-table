@@ -9,6 +9,7 @@ import {
     TableRowsSelectionRowProps,
     TableLinkHighlightRowWithSelectionRowProps,
 } from './components/VirtualizedTable/plugins';
+import {FinalCellProps, CustomColumnProps} from './sharedTypes'
 
 declare module 'react-table' {
     export interface TableOptions<D extends object>
@@ -16,9 +17,9 @@ declare module 'react-table' {
             UseSortByColumnOptions<D> {}
 
     export type GetRowId<D extends object> = UseTableOptions<D>['getRowId'];
-    export type GetTableBodyProps = UseTableInstanceProps['getTableBodyProps'];
+    export type GetTableBodyProps<D extends object> = UseTableInstanceProps<D>['getTableBodyProps'];
     export type UseTableRows<D extends object> = UseTableInstanceProps<D>['rows'];
-    export type PrepareRow = UseTableInstanceProps['prepareRow'];
+    export type PrepareRow<D extends object> = UseTableInstanceProps<D>['prepareRow'];
 
     export type TableInstanceWithProps<D extends object, P extends object> = TableInstance<D> & P;
 
@@ -35,6 +36,8 @@ declare module 'react-table' {
             E
     >;
 
+    // export interface TableInstance<D extends object> extends FinalTableInstance<D> {}
+
     export type RowCellRenderProps = {
         isSelected: boolean;
         isHighlighted: boolean;
@@ -48,8 +51,7 @@ declare module 'react-table' {
 
     export type RowWithProps<D extends object, P extends object = {}> = Row<D> &
         TableRowsSelectionRowProps<D> &
-        TableLinkHighlightRowWithSelectionRowProps<D>;
-    P;
+        TableLinkHighlightRowWithSelectionRowProps;
 
     export interface Hooks<D extends object, P extends object = {}> {
         useInstance: Array<(instance: TableInstanceWithProps<D, P>) => void>;
@@ -64,7 +66,7 @@ declare module 'react-table' {
     export interface TableRowProps extends TableCommonProps, TableSelectionModeRowProps {}
 
     export interface UseTableHooks<D extends object> extends Record<string, any> {
-        useInstance: Array<(instance: FinalTableInstance<D>) => void>;
+        useInstance: Array<(instance: TableInstance<D>) => void>;
     }
 
     export interface UseTableColumnProps<D extends object>

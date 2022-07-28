@@ -1,4 +1,4 @@
-import { RowWithProps, FinalTableInstance } from 'react-table';
+import { RowWithProps, FinalTableInstance, } from 'react-table';
 import { TableLinkHighlightRowWithSelectionInstanceProps } from './useInstance';
 
 export type TableLinkHighlightRowWithSelectionRowProps = Pick<
