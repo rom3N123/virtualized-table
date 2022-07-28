@@ -9,12 +9,12 @@ import {
     HeaderProps,
 } from 'react-table';
 
-export type CellRenderer<D extends object, V extends unknown, E extends RowCellRenderProps> =
-    | Renderer<FinalCellProps<D, V, E>>
+export type CellRenderer<D extends object, V extends unknown> =
+    | Renderer<FinalCellProps<D, V>>
     | undefined;
 
-export type HeaderRenderer<D extends object, V extends unknown, E extends RowCellRenderProps> =
-    | Renderer<HeaderProps<D> & FinalCellProps<D, V, E>>
+export type HeaderRenderer<D extends object, V extends unknown> =
+    | Renderer<HeaderProps<D> & FinalCellProps<D, V>>
     | undefined;
 
 export type FinalCellProps<D extends object, V, E extends object = {}> = FinalTableInstance<
@@ -31,8 +31,8 @@ export type CustomColumnProps = {
     grow?: number;
 };
 
-export interface ColumnInterface<D extends object, V extends unknown, E extends RowCellRenderProps>
+export interface ColumnInterface<D extends object, V extends unknown>
     extends CustomColumnProps {
-    Cell?: CellRenderer<D, V, E>;
-    Header?: HeaderRenderer<D, V, E>;
+    Cell?: CellRenderer<D, V>;
+    Header?: HeaderRenderer<D, V>;
 }
