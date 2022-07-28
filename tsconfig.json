@@ -10,7 +10,7 @@
         "jsx": "react-jsx",
         "lib": ["DOM", "ES2015", "ES2015.promise", "ES2015.Proxy", "ES2017"],
         "strict": true,
-        "skipLibCheck": true,
+        "skipLibCheck": false,
         "esModuleInterop": true
     },
     "include": ["src/**/*"]
